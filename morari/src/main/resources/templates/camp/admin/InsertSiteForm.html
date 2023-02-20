@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <script src="/morari/admin/js/head.js"></script>
+
+    <!-- sharepage -->
+    <script src="/morari/admin/js/share.js"></script>
+
+</head>
+
+<body id="page-top" style="display: none">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- sidebar -->
+        <div class="sidebarshare"></div>
+        <!-- sidebar end -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- topbar -->
+                <div class="topbarshare"></div>
+                <!-- topbar end -->
+
+                <!-- Begin Page Content(開始主要內容區塊) -->
+                <div class="container-fluid">
+
+                    <div class="long"><b>═══ 新增營區 ═══</b></div>
+
+                    <hr>
+                    <br>
+
+                    <form id="form" method="post" enctype="multipart/form-data"></form>
+
+                    <hr>
+
+                </div>
+                <!-- /.container-fluid(結束主要內容區塊) -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div class="footershare"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="loginoutshare"></div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/morari/admin/vendor/jquery/jquery.min.js"></script>
+    <script src="/morari/admin/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/morari/admin/vendor/jquery-easing/jquery.easing.min.js" defer></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="/morari/admin/js/sb-admin-2.min.js" defer></script>
+
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $(document).ready(function () {
+                var campID = JSON.parse(sessionStorage.getItem("campID"));
+
+                var form = $('#form');
+                var div = '';
+
+                div = '營區位名: <input type="text" id="siteName" name="siteName" placeholder="營區位名" ><span id="errorSiteName" style="color: red;"></span><br>'
+                    + '<img src="" id="showimg">'
+                    + '上傳圖片: <input type="file" name="sitePicturesPath" id="sitePicturesPath"><span id="errorsitePicturesPath" style="color: red;"></span><br>'
+                    + '總營位: <input type="text" id="totalSites" name="totalSites" placeholder="總營位" ><span id="errortotalSites" style="color: red;"></span><br>'
+                    + '營位金額: <input type="text" id="siteMoney" name="siteMoney" placeholder="營位金額" ><span id="errorsiteMoney" style="color: red;"></span><br>'
+                    + '營地編號: <input type="text" name="campID" readonly="readonly" value="' + campID + '"><br>'
+                    + '<button id="one" style="border:none;background-color:transparent" type="button"><span><a href="#" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-plus"></i></span><span class="text">一鍵輸入</span></a></span></button>'
+                    + '<button id="send" style="border:none;background-color:transparent" type="button"><span><a href="#" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-plus"></i></span><span class="text">營地新增</span></a></span></button><span id="errornone" style="color: red;"></span>'
+                form.append(div);
+                    
+                $('.long').width('400px').css("font-size", "25px").css("color", "SaddleBrown");
+
+                $('body').on('click', '#send', function () {
+                    // console.log(form);
+                    // console.log(form.get(0));
+                    var formData = new FormData(form.get(0));
+                    $.ajax({
+                        url: '/morari/admin/camp/insertSite.controller',
+                        type: 'post',
+                        data: formData,
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        success: function (after) {
+
+                            $("#errorSiteName").empty();
+                            $("#errorsitePicturesPath").empty();
+                            $("#errortotalSites").empty();
+                            $("#errorsiteMoney").empty();
+                            $("#errornone").empty();
+
+                            if (after.error == 'true') {
+                                $("#errorSiteName").append(after.siteName);
+                                $("#errorsitePicturesPath").append(after.sitePicturesPath);
+                                $("#errortotalSites").append(after.totalSites);
+                                $("#errorsiteMoney").append(after.siteMoney);
+                                return;
+                            }
+                            else if (after.error == 'none') {
+                                $("#errornone").append(after.noData);
+                                return;
+                            }
+                            else {
+                                alert('新增成功!! 營地編號: ' + after.siteID);
+
+                                $("#form").empty();
+                                var form = $('#form');
+                                var div = '';
+
+                                div = '營區位編號: <input type="text" name="siteID" readonly="readonly" value="' + after.siteID + '"><br>'
+                                    + '營區位名: <input type="text" name="siteName" value="' + after.siteName + '"><br>'
+                                    + '圖片: <img src="' + after.sitePicturesPath + '"><br>'
+                                    + '總營位: <input type="text" name="totalSites" value="' + after.totalSites + '"><br>'
+                                    + '營位金額: <input type="text" name="siteMoney" value="' + after.siteMoney + '"><br>'
+                                    + '營地編號: <input type="text" name="campID" readonly="readonly" value="' + after.camp.campID + '"><br>'
+                                form.append(div);
+
+                                $('img').width('100px').height('100px');
+                                $('.long').width('400px').css("font-size", "25px").css("color", "SaddleBrown");
+                            }
+                        }
+                    });
+                });
+
+                $('body').on('click', '#one', function () {
+                    $('#siteName').val('新增範例營地');
+                    $('#totalSites').val(10);
+                    $('#siteMoney').val(100);
+                });
+
+                $('body').on('change', '#sitePicturesPath', function () {
+                    file = this.files[0];
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        $("#showimg").attr("src", e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                    $('img').width('100px').height('100px');
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

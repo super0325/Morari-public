@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <script src="/morari/guest/js/head.js"></script>
+  <!-- sharepage 公用頁面 -->
+  <script src="/morari/guest/js/share.js"></script>
+
+  <style>
+    td {
+      border: 2px black solid;
+    }
+  </style>
+
+</head>
+
+<body style="display: none">
+  <!-- Header Section Start -->
+  <div class="header"></div>
+  <!-- Header Section End -->
+  <div class="wrapper">
+
+
+
+
+
+    <!-- 分離範例 -->
+
+    <div class="container">
+      <div class="center">
+
+        <table id="result"></table>
+      </div>
+    </div>
+
+
+
+
+
+  </div>
+  <!-- Footer Section Start -->
+  <div class="footer"></div>
+  <!-- Footer Section End -->
+
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+
+  <!-- Vendor JavaScript File -->
+  <script src="/morari/guest/vendor/jquery/jquery.min.js"></script>
+  <script src="/morari/guest/vendor/jquery/jquery-migrate.min.js" defer></script>
+  <script src="/morari/guest/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+  <script src="/morari/guest/vendor/easing/easing.min.js" defer></script>
+  <script src="/morari/guest/vendor/stickyjs/sticky.js" defer></script>
+  <script src="/morari/guest/vendor/superfish/hoverIntent.js" defer></script>
+  <script src="/morari/guest/vendor/superfish/superfish.min.js" defer></script>
+  <script src="/morari/guest/vendor/wow/wow.min.js" defer></script>
+  <script src="/morari/guest/vendor/slick/slick.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/moment.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/moment-timezone.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/tempusdominus-bootstrap-4.min.js" defer></script>
+
+  <!-- Booking Javascript File -->
+  <script src="/morari/guest/js/booking.js" defer></script>
+  <script src="/morari/guest/js/jqBootstrapValidation.min.js" defer></script>
+
+  <!-- Main Javascript File -->
+  <script src="/morari/guest/js/main.js" defer></script>
+
+  <script type="text/javascript">
+    var njsdata;
+
+
+    var id
+    var uid;
+
+
+    fetch('/morari/ProductCart/selectAllByUserId', { method: 'GET' }).then(
+      function (response) {
+        if (response.status != 200) {
+          console.log(response.satus);
+          return;
+        }
+        console.log(response);
+        response.json().then(function (njs) {
+          var tableData =
+            "<h3>訂單預覽&nbsp;&nbsp;" +
+            "<small>   目前有<font color='red'>" + njs.length + "</font>種產品</small></h3>" +
+            "<th style='text-align:right'>產品名稱</th>" + "<th>產品價格</th>" +
+            "<th>數量</th>" + "<th>照片</th>" +
+            "<th style='text-align:right'>小計</th>";
+          var total = 0;
+          if (njs.length == 0) {
+            alert("暫無希望購買的產品");
+          } else {
+            console.log(njs);
+            njsdata = njs
+            for (var i = 0; i < njs.length; i++) {
+              var money = njs[i].pdprice * njs[i].ctqty
+              total += money; // 累加money到total
+              tableData +=
+                "<tr>" +
+                "<td style='text-align:right'>" + njs[i].pdname + "</td>" + "<td>" + njs[i].pdprice + "</td>" +
+                "<td>" + njs[i].ctqty + "</td>" +
+                "<td><img src='" + njs[i].pdpicture + "' style='max-width: 150px;'></td>" +
+                "<td style='text-align:right'>" + money + '$' + "</td>" +
+                "</tr>"
+            }
+            tableData += "<tr><td colspan='4' style='text-align:right'><font size='5'>" + '總計' + "</font></td>" +
+              "<td colspan='2'><font size='5' color='red'>" + 'NT' + total + '$' + "</font></td></tr>" +
+              "<form id='formnew'>" +
+              "<tr><td colspan='5' style='text-align:center'>收件人名稱</td></tr>" +
+              "<tr><td colspan='5' style='text-align:center'><input type='text' value='' name='odrecipient' id='odrecipient'/></td></tr>" +
+              "<tr><td colspan='5' style='text-align:center'>收件人電話</td></tr><br>" +
+              "<tr><td colspan='5' style='text-align:center'><input type='text' value='' name='odrecipientphone' id='odrecipientphone'/></td></tr><br>" +
+              "<tr><td colspan='5' style='text-align:center'>收件地址</td></tr><br>" +
+              "<tr><td colspan='5' style='text-align:center'><input type='text' value='' name='odshippingaddress' id='odshippingaddress'/></td></tr>" +
+              "<tr><td colspan='2' style='text-align:left'><input type='button' value='一鍵輸入' onclick='inputvalue()'></td>" +
+              "<td colspan='3' style='text-align:right'><input type='button' id='createOrder' value='提交訂單' onclick='createOrder(" + total + ")'></td></tr>" +
+              "</form>" +
+              "</tr>";
+          }
+          document.getElementById('result').innerHTML = tableData;
+        });
+      });
+
+
+
+
+    function createOrder(total) {
+      var odrecipient = $('#odrecipient').val();
+      var odrecipientphone = $('#odrecipientphone').val();
+      var odshippingaddress = $('#odshippingaddress').val();
+
+      if (odrecipient == 0) {
+        alert('收件人未填寫');
+        return;
+      }
+      if (odrecipientphone == 0) {
+        alert('收件人電話未填寫');
+        return;
+      }
+      if (odshippingaddress == 0) {
+        alert('收件地址未填寫');
+        return;
+      }
+
+      if (confirm("確定提交訂單?")) {
+
+        $.ajax({
+          type: 'post',
+          url: '/morari/ProductOrder/create?odrecipient=' + odrecipient + "&odrecipientphone=" + odrecipientphone + "&odshippingaddress=" + odshippingaddress + "&money=" + total,
+          data: JSON.stringify(njsdata),
+          dataType: 'text',
+          contentType: "application/json",
+          success: function (response) {
+            alert(response);
+            window.location.href = "/morari/ProductOrder/selectorderbyuseridAction.controller";
+          },
+          error: function () {
+            // 刪除失敗時的處理
+            alert('執行失敗');
+          }
+        });
+      } else {
+      }
+    }
+    function inputvalue() {
+      $('#odrecipient').val("陳昱辰");
+      $('#odrecipientphone').val("0976852865");
+      $('#odshippingaddress').val("新北市三重區");
+    }
+  </script>
+
+
+</body>
+
+</html>

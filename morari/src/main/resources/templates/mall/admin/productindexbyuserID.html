@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<!-- 	datatables -->
+
+
+<head>
+	<script src="/morari/admin/js/head.js"></script>
+
+	<!-- sharepage -->
+	<script src="/morari/admin/js/share.js"></script>
+	<style>
+		td {
+			border: 2px black solid;
+		}
+	</style>
+
+
+</head>
+
+<body id="page-top" style="display: none">
+
+	<!-- Page Wrapper -->
+	<div id="wrapper">
+		<!-- sidebar -->
+		<div class="sidebarshare"></div>
+		<!-- sidebar end -->
+
+		<!-- Content Wrapper -->
+		<div id="content-wrapper" class="d-flex flex-column">
+
+			<!-- Main Content -->
+			<div id="content">
+
+				<!-- topbar -->
+				<div class="topbarshare"></div>
+				<!-- topbar end -->
+
+				<!-- Begin Page Content(開始主要內容區塊) -->
+				<div class="container-fluid">
+
+					<h3>商城管理</h3>
+					<button id="create" class="btn btn-success btn-icon-split" onclick='create()'>
+						<span class="icon text-white-50"><i class="fas fa-plus"></i></span>
+						<span class="text">新增產品</span>
+					</button>
+					<table id="result" class="table is-striped"></table>
+
+				</div>
+				<!-- /.container-fluid(結束主要內容區塊) -->
+
+			</div>
+			<!-- End of Main Content -->
+
+			<!-- Footer -->
+			<div class="footershare"></div>
+			<!-- End of Footer -->
+
+		</div>
+		<!-- End of Content Wrapper -->
+
+	</div>
+	<!-- End of Page Wrapper -->
+
+	<!-- Scroll to Top Button-->
+	<a class="scroll-to-top rounded" href="#page-top"> <i class="fas fa-angle-up"></i>
+	</a>
+
+	<!-- Logout Modal-->
+	<div class="loginoutshare"></div>
+
+	<!-- Bootstrap core JavaScript-->
+	<script src="/morari/admin/vendor/jquery/jquery.min.js"></script>
+	<script src="/morari/admin/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+
+	<!-- Core plugin JavaScript-->
+	<script src="/morari/admin/vendor/jquery-easing/jquery.easing.min.js" defer></script>
+
+	<!-- Custom scripts for all pages-->
+	<script src="/morari/admin/js/sb-admin-2.min.js" defer></script>
+
+	<!-- Page level plugins -->
+	<script src="/morari/admin/vendor/chart.js/Chart.min.js" defer></script>
+
+	<!-- Page level custom scripts -->
+	<script src="/morari/admin/js/demo/chart-area-demo.js" defer></script>
+	<script src="/morari/admin/js/demo/chart-pie-demo.js" defer></script>
+
+	<script src="/morari/admin/vendor/datatables/datatables13.js"></script>
+	<script src="/morari/admin/vendor/datatables/datatableresponsive.js"></script>
+
+	<script type="text/javascript">
+		fetch('/morari/mall/selectAllByUserId', {
+			method: 'GET'
+		})
+			.then(
+				function (response) {
+					if (response.status != 200) {
+						console.log(response.satus);
+						return;
+					}
+					var table
+					$(document).ready(
+						function () {
+							console.log(response);
+							response.json().then(
+								function (n) {
+									table = $('#result')
+										.DataTable(
+											{
+												data: n,
+												responsive: true,
+												columns: [
+
+													{
+														data: 'pdid',
+														title: '產品編號',
+														responsivePriority: 1
+													},
+													{
+														data: 'pdname',
+														title: '產品名稱',
+														responsivePriority: 2
+													},
+													{
+														data: 'userid',
+														title: '會員id',
+														responsivePriority: 10
+													},
+													{
+														data: 'pdtitle',
+														title: '品牌名稱',
+														responsivePriority: 3
+													},
+													{
+														data: 'pdcontent',
+														title: '產品規格',
+														responsivePriority: 13
+													},
+													{
+														data: 'pdtype',
+														title: '類型',
+														responsivePriority: 4
+													},
+													{
+														data: null,
+														title: '照片',
+														render: function (
+															data,
+															type,
+															row) {
+															return `<img src='${data.pdpicture}' style="max-width: 130px;">`;
+														},
+														responsivePriority: 5
+													},
+													{
+														data: 'pdprice',
+														title: '產品價格',
+														responsivePriority: 6
+													},
+													{
+														data: 'pdinventory',
+														title: '產品庫存',
+														responsivePriority: 8
+													},
+													{
+														data: 'pddate',
+														title: '上架時間',
+														responsivePriority: 7
+													},
+													{
+														data: 'pdlastupdate',
+														title: '產品修改時間',
+														responsivePriority: 9
+													},
+													{
+														data: null,
+														"title": "修改",
+														render: function (data, type, row, meta) {
+															return '<button class=\"datatable_edit_button\" onclick=\"edituser(\'' + row.pdid + '\')\"><i class=\"fas fa-sliders-h\"></i></button>'
+														}
+														, responsivePriority: 11
+													},
+													{
+														data: null,
+														"title": "刪除",
+														render: function (data, type, row, meta) {
+															return '<button class=\"datatable_del_button\"   onclick=\"deluser(\'' + row.pdid + '\')\"><i class=\"fas fa-trash-alt\"></i></button>'
+														}
+														, responsivePriority: 12
+													},
+
+												],
+												lengthMenu: [
+													5,
+													10,
+													15,
+													20],
+												language: {
+													"lengthMenu": "顯示 _MENU_ 筆資料",
+													"info": "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
+													"search": "搜尋：",
+													"paginate": {
+														"next": "下一頁",
+														"previous": "上一頁"
+													}
+												}
+
+											});
+									// 表頭不換行
+									$('#result thead tr th').css('white-space', 'nowrap');
+									table.responsive.recalc();
+									setTimeout(
+										function () {
+											table.responsive
+												.recalc();
+										},
+										1000);
+
+
+								});
+						});
+
+				});
+
+		function deluser(pdid) {
+			if (confirm("確定刪除此項產品資料(編號:" + pdid + ")?")) {
+				$.ajax({
+					url: '/morari/mall/deleteByPdid/' + pdid,
+					type: 'delete',
+					dataType: 'text',
+					success: function (data) {
+						alert(data);
+						location.reload();
+					},
+					error: function () {
+						// 刪除失敗時的處理
+						alert('刪除失敗');
+					}
+
+				});
+			} else {
+			}
+		}
+		function edituser(pdid) {
+			if (confirm("確定修改此項產品資料(編號:" + pdid + ")?")) {
+				$
+					.ajax({
+						success: function (data) {
+							window.location.href = "/morari/mall/updateproduct.controller/"
+								+ pdid;
+						}
+					});
+			} else {
+			}
+		}
+		function create() {
+			$
+				.ajax({
+					success: function (data) {
+						window.location.href = "/morari/mall/productcreate.controller";
+					}
+				});
+		}
+	</script>
+
+</body>
+
+</html>

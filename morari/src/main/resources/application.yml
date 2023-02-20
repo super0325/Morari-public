@@ -1,0 +1,88 @@
+server:
+  # error:
+  #   include-stacktrace: always
+  #   path: /error
+  #   whitelabel:
+  #     enabled: false
+  port: 8443
+  servlet:
+    context-path: /morari
+    encoding:
+      charset: UTF-8
+  ssl:
+    # 憑證別名
+    key-alias: baeldung
+    # 僅提供 https 服務(不使用 http)
+    enabled: true
+    # 憑證路徑
+    key-store: classpath:keystore/baeldung.p12
+    # 憑證密碼
+    key-store-password: "3s6v9y$B&E)H@McQfThWmZq4t7w!z%C*F-JaNdRgUkXn2r5u8x/A?D(G+KbPeShVmYq3t6v9y$B&E)H@McQfTjWnZr4u7x!z%C*F"
+    # 憑證格式：JKS 或 PKCS12
+    key-store-type: PKCS12
+  http2:
+    enabled: true
+
+
+
+
+spring:
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;databaseName=campDB;TrustServerCertificate=True;encrypt=true;
+# -------------MSSQL------------- 
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    # url: jdbc:sqlserver://localhost:1433;databaseName=campDB;TrustServerCertificate=True;encrypt=true;
+    password: "0000"
+    username: sa    
+    # password: "q4t7w！z%C&F）J@NcRfUjXn2r5u8x/A？D（G-KaPdSgVkYp3s6v9y$B&E）H@MbQeThWmZq4t7w！z%C*F-JaNdRfUjXn2r5u8x/A？D("
+    # username: Team4Admin    
+# -------------MYSQL------------- 
+    # driver-class-name: com.mysql.cj.jdbc.Driver
+    # url: jdbc:mysql://localhost:3306/campDB?serverTimezone=UTC&useSSL=false
+    # password: "MbQeThWmZq4t6w9z$C&F)J@NcRfUjXn2r5u8x!A%D*G-KaPdSgVkYp3s6v9y$B?E(H+MbQeThWmZq4t7w!z%C*F-J@NcRfUjXn2r"
+    # username: Team4Admin
+
+  jpa:
+    properties:
+      hibernate:
+# -------------MSSQL------------- 
+        dialect: org.hibernate.dialect.SQLServer2016Dialect
+        allow_update_outside_transaction: true
+        format_sql: true
+        hbm2ddl:
+          auto: update
+    # show-sql: true
+# -------------MYSQL-------------
+        # dialect: org.hibernate.dialect.MySQL8Dialect
+        # '[allow_update_outside_transaction]': true
+        # # '[hbm2ddl.auto]': create
+        # '[hbm2ddl.auto]': update
+        # '[format_sql]': true
+    # show-sql: true
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 1MB
+      max-request-size: 1MB
+  thymeleaf:
+    prefix: classpath:/templates/
+  web:
+    resources:
+      cache:
+        period: 0
+      static-locations: classpath:/static/
+  # cloud:
+  #   azure:
+  #     storage:
+  #       blob:
+  #         account-name: eteam4eit56blobdb
+  #         account-key: DefaultEndpointsProtocol=https;AccountName=eteam4eit56blobdb;AccountKey=gcDS9D5Ckpz6kfr/xgUjG2Nyg6JYNn65t74VEzWjRW7bjAca+W6epPfD7/JCZ41mOR+muUWygyKw+AStTWI9QQ==;EndpointSuffix=core.windows.net
+  #         endpoint: https://eteam4eit56blobdb.blob.core.windows.net/  
+  main:
+    allow-circular-references: true
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+

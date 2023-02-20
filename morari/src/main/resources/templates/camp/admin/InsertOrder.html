@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <script src="/morari/admin/js/head.js"></script>
+
+    <!-- sharepage -->
+    <script src="/morari/admin/js/share.js"></script>
+
+</head>
+
+<body id="page-top" style="display: none">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- sidebar -->
+        <div class="sidebarshare"></div>
+        <!-- sidebar end -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- topbar -->
+                <div class="topbarshare"></div>
+                <!-- topbar end -->
+
+                <!-- Begin Page Content(開始主要內容區塊) -->
+                <div class="container-fluid">
+
+                    <div id="div"></div>
+
+                </div>
+                <!-- /.container-fluid(結束主要內容區塊) -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div class="footershare"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="loginoutshare"></div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/morari/admin/vendor/jquery/jquery.min.js"></script>
+    <script src="/morari/admin/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/morari/admin/vendor/jquery-easing/jquery.easing.min.js" defer></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="/morari/admin/js/sb-admin-2.min.js" defer></script>
+
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $(document).ready(function () {
+                var campID = JSON.parse(sessionStorage.getItem("campID"));
+                $.getJSON('/morari/admin/camp/sitesOfCamp.controller/' + campID, function (data) {
+                    var div = $('#div');
+                    var tmp = '';
+                    div.append('<div><span>營位編號</span><span>營位名</span><span>圖片</span><span>總營位</span><span>營位金額</span></div>');
+                    $.each(data, function (i, n) {
+                        tmp = '<div id="order' + n.siteID + '">'
+                            + '<span name="siteID">' + n.siteID + '<span class="errorsiteID" style="color: red;"></span></span>'
+                            + '<span>' + n.siteName + '</span>'
+                            + '<span>' + '<img width="80" height="100" src="' + n.sitePicturesPath + '">' + '</span>'
+                            + '<span>' + n.totalSites + '</span>'
+                            + '<span name="unitPrice">' + n.siteMoney + '</span>'
+                            + '<span name="numbers"><a href="#" class="btn btn-success btn-circle"><i class="fas fa-calculator"></i></a>預約數量:</span><input name="num" type="number" min="0" step="1" value="0"><span><span class="errornumbers" style="color: red;"></span>'
+                            + '</div>'
+                        div.append(tmp);
+
+                    });
+                    div.append('<span>入營時間:<input type="date" name="goingdate"></span>');
+                    div.append('<span>離營時間:<input type="date" name="leavingdate"><br>');
+                    div.append('<button id="addOrder" style="border:none;background-color:transparent" type="button"><span><a href="#" class="btn btn-primary btn-icon-split"><span class="icon text-white-50"><i class="fas fa-calculator"></i></span><span class="text">結帳</span></a></span></button><span id="errordate" style="color: red;"></span></button><span id="errornone" style="color: red;"></span>')
+
+
+                    $('span').css("margin", '20px');
+                    $('input').width(130);
+                    $('img').width('100px').height('100px');
+                });
+
+
+                $('body').on('click', '#addOrder', function () {
+                    let siteIds = [];
+                    let nums = [];
+                    let orderItems = $('div[id^="order"]');
+                    $.each(orderItems, function (index, orderItem) {
+                        let siteId = $($(orderItem).find('span[name="siteID"]').get(0)).text();
+                        let num = $($(orderItem).find('input[name="num"]').get(0)).val();
+                        siteIds.push(siteId);
+                        nums.push(num);
+                    });
+                    let div = $('#div').find('input[name="goingdate"]')
+                    let goingdate = $($('#div').find('input[name="goingdate"]').get(0)).val();
+                    let leavingdate = $($('#div').find('input[name="leavingdate"]').get(0)).val();
+
+                    var formData = new FormData();
+                    formData.append('siteIds', siteIds);
+                    formData.append('nums', nums);
+                    formData.append('goingdate', goingdate);
+                    formData.append('leavingdate', leavingdate);
+                    formData.append('campID', campID);
+
+                    $.ajax({
+                        url: '/morari/admin/camp/insertOrder.controller',
+                        type: 'post',
+                        data: formData,
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        success: function (after) {
+                            $(".errorsiteID").empty();
+                            $(".errornumbers").empty();
+                            $("#errordate").empty();
+                            $("#errornone").empty();
+
+                            if (after.error == 'true') {
+                                $(".errorsiteID").append(after.siteIds);
+                                $(".errornumbers").append(after.nums);
+                                $("#errordate").append(after.timeString);
+                                return;
+                            }
+                            else if (after.error == 'none') {
+                                $("#errornone").append(after.noData);
+                                return;
+                            }
+                            else {
+                                $("#div").empty();
+                                $("#div").append(after);
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

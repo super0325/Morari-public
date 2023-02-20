@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <script src="/morari/guest/js/head.js"></script>
+  <!-- sharepage 公用頁面 -->
+  <script src="/morari/guest/js/share.js"></script>
+
+  <style>
+    tr {
+      border: 2px black solid;
+    }
+  </style>
+
+</head>
+
+<body style="display: none">
+  <!-- Header Section Start -->
+  <div class="header"></div>
+  <!-- Header Section End -->
+  <div class="wrapper">
+
+
+
+
+
+    <!-- 分離範例 -->
+
+    <div class="container">
+      <div class="center">
+
+        <table id="result"></table>
+      </div>
+    </div>
+
+
+
+
+  </div>
+  <!-- Footer Section Start -->
+  <div class="footer"></div>
+  <!-- Footer Section End -->
+
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+
+  <!-- Vendor JavaScript File -->
+  <script src="/morari/guest/vendor/jquery/jquery.min.js"></script>
+  <script src="/morari/guest/vendor/jquery/jquery-migrate.min.js" defer></script>
+  <script src="/morari/guest/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+  <script src="/morari/guest/vendor/easing/easing.min.js" defer></script>
+  <script src="/morari/guest/vendor/stickyjs/sticky.js" defer></script>
+  <script src="/morari/guest/vendor/superfish/hoverIntent.js" defer></script>
+  <script src="/morari/guest/vendor/superfish/superfish.min.js" defer></script>
+  <script src="/morari/guest/vendor/wow/wow.min.js" defer></script>
+  <script src="/morari/guest/vendor/slick/slick.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/moment.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/moment-timezone.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/tempusdominus-bootstrap-4.min.js" defer></script>
+
+  <!-- Booking Javascript File -->
+  <script src="/morari/guest/js/booking.js" defer></script>
+  <script src="/morari/guest/js/jqBootstrapValidation.min.js" defer></script>
+
+  <!-- Main Javascript File -->
+  <script src="/morari/guest/js/main.js" defer></script>
+
+  <script>
+    var url = window.location.href;
+    var id = url.split("/").pop();
+    console.log(id);
+    var uid;
+    var productName;
+    var amount;
+    var orderId;
+    var picimg;
+    fetch("/morari/utils/getuid")
+      .then(response => response.text())
+      .then(datauid => {
+        uid = datauid;
+        console.log(uid);
+      })
+
+
+    fetch('/morari/ProductOrder/selectById/' + id, { method: 'GET' }).then(
+      function (response) {
+        if (response.status != 200) {
+          console.log(response.satus);
+          return;
+        }
+        console.log(response);
+        $(document).ready(function () {
+
+          response.json().then(function (n) {
+            productName = n[0].pdname
+            amount = n[0].pdprice
+            orderId = n[0].id
+            picimg = n[0].pdpicture
+            var tableData =
+              "<h3>我的訂單詳情&nbsp;&nbsp;" +
+              "<small>   目前擁有<font color='red'>" + n.length + "</font>筆產品</small></h3>" +
+              "<tr>" +
+              "<td style='text-align:right;'>訂單編號 :</td>" +
+              "<td>" + n[0].id + "</td>" +
+              "<td>訂單成立時間 :</td>" +
+              "<td>" + n[0].datetime + "</td>" +
+              "</tr>" +
+              "<tr>" +
+              "<td style='text-align:right;'>收件人 :</td>" +
+              "<td>" + n[0].odrecipient + "</td>" +
+              "<td>收件人連絡電話 :</td>" +
+              "<td>" + n[0].odrecipientphone + "</td>" +
+              "</tr>" +
+              "<tr>" +
+              "<td style='text-align:right;'>送貨地址 :</td>" +
+              "<td>" + n[0].odshippingaddress + "</td>" +
+              "<td>總價 :</td>" +
+              "<td>" + "NT$" + n[0].money + "</td>" +
+              "</tr>" +
+              "<tr>" +
+              "<td align='center'><font size='5'>商品列表:</font></td>" +
+              "<td colspan='3'>" +
+              "<table align='center' cellpadding='0' cellspacing='0' width='100 % '  class='table table - striped table - bordered table - hover'>" +
+              "<tr align='center'  class='info'>" +
+              "<th>序號</th>" +
+              "<th>產品照片</th>" +
+              "<th>產品名稱</th>" +
+              "<th>產品單價</th>" +
+              "<th>購買數量</th>" +
+              "<th>小計</th>" +
+              "</tr>"
+              ;
+
+
+            for (var i = 0; i < n.length; i++) {
+              let a = i + 1;
+              let pdallprice = n[i].pdprice * n[i].pdqty;
+              tableData +=
+                "<tr align='center'>" +
+                "<th>" + a + "</th>" +
+                "<th>" +
+                "<img src=" + n[i].pdpicture + " style='width: 80px; height: 80px' >" +
+                "</th>" +
+                "<th>" + n[i].pdname + "</th>" +
+                "<th>" + n[i].pdprice + "</th>" +
+                "<th>" + n[i].pdqty + "</th>" +
+                "<th>" + "NT$" + pdallprice + "</th>" +
+                "</tr>"
+            }
+            tableData += "<tr>" +
+              "<td align='right' colspan='4' style='margin-right: 40px;''>" +
+              "<a href='/morari/ProductOrder/selectorderbyuseridAction.controller'class='btn btn-danger btn-sm'>返回訂單列表</a>" +
+              "<c:if test='${vo.order.status eq 1 }'>" +
+              "<button type='button' onclick='pay('${vo.order.id}','${vo.order.money}')' class='btn btn-warning btn-sm'>ECPay</button>" +
+              "<button type='button' onclick='payLinepay()' class='btn btn-success btn-sm'>LINEPay</button>" +
+              "</c:if>" +
+              "</td>" +
+              "</tr>";
+
+            document.getElementById('result').innerHTML = tableData;
+
+
+
+          });
+        });
+
+      });
+
+    function orderDetail(id) {
+      if (confirm("確定查看(編號:" + id + ")?")) {
+        $.ajax({
+          success: function (data) {
+            window.location.href = "/morari/ProductOrderDetail/selectAllByPdorderid.controller/" + id;
+          }
+        });
+      } else {
+      }
+    }
+    function payLinepay() {
+      // 讀取表格欄位內的資料
+      var currency = "TWD";
+      var confirmUrl = "https://localhost:8443/morari/Category/getlinepay.controller";
+
+      // 將資料轉換成JSON格式
+      var jsonData = {
+        "productName": productName,
+        "amount": amount,
+        "currency": currency,
+        "productImageUrl": picimg,
+        "confirmUrl": confirmUrl,
+        "orderId": orderId
+      };
+      console.log(jsonData);
+      // 使用jQuery的ajax()方法將JSON數據發送到後端
+      $.ajax({
+        type: "GET",
+        url: "/morari/Category/paybyline",
+        data: { "JsonOrderList": JSON.stringify(jsonData) },
+        contentType: "application/json",
+        dataType: "text",
+        success: function (data) {
+          window.location.href = data;
+          console(data);
+        },
+        error: function (error) {
+          // 處理錯誤
+        }
+      });
+    };
+  </script>
+
+
+</body>
+
+</html>

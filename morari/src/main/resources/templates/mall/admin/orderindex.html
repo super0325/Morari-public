@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <script src="/morari/admin/js/head.js"></script>
+
+    <!-- sharepage -->
+    <script src="/morari/admin/js/share.js"></script>
+
+    <style>
+        td {
+            border: 2px black solid;
+        }
+    </style>
+
+
+
+</head>
+
+<body id="page-top" style="display: none">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- sidebar -->
+        <div class="sidebarshare"></div>
+        <!-- sidebar end -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- topbar -->
+                <div class="topbarshare"></div>
+                <!-- topbar end -->
+
+                <!-- Begin Page Content(開始主要內容區塊) -->
+                <div class="container-fluid">
+
+                    <h3>凹豆商城 訂單管理</h3>
+                    <table id="result" class="table is-striped"></table>
+
+                </div>
+                <!-- /.container-fluid(結束主要內容區塊) -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div class="footershare"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="loginoutshare"></div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/morari/admin/vendor/jquery/jquery.min.js"></script>
+    <script src="/morari/admin/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/morari/admin/vendor/jquery-easing/jquery.easing.min.js" defer></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="/morari/admin/js/sb-admin-2.min.js" defer></script>
+
+    <!-- Page level plugins -->
+    <script src="/morari/admin/vendor/chart.js/Chart.min.js" defer></script>
+
+    <!-- Page level custom scripts -->
+    <script src="/morari/admin/js/demo/chart-area-demo.js" defer></script>
+    <script src="/morari/admin/js/demo/chart-pie-demo.js" defer></script>
+
+    <!-- datatable -->
+    <script src="/morari/admin/vendor/datatables/datatables13.js"></script>
+    <script src="/morari/admin/vendor/datatables/datatableresponsive.js"></script>
+
+    <script type="text/javascript">
+        fetch('/morari/ProductOrder/selectAll', { method: 'GET' }).then(
+            function (response) {
+                if (response.status != 200) {
+                    console.log(response.satus);
+                    return;
+                }
+                console.log(response);
+                var table
+                $(document).ready(function () {
+
+                    response.json().then(function (n) {
+                        table =
+                            $('#result').DataTable({
+                                data: n,
+                                responsive: true,
+                                columns: [
+
+                                    { data: 'id', title: '訂單編號' },
+                                    { data: 'userid', title: '用戶ID' },
+                                    { data: 'odstatus', title: '出貨狀態' },
+                                    { data: 'datetime', title: '訂單成立時間' },
+                                    { data: 'money', title: '總金額' },
+                                    { data: 'odrecipient', title: '收件人姓名' },
+                                    { data: 'odrecipientphone', title: '收件人電話' },
+                                    { data: 'odshippingaddress', title: '收件地址' },
+
+                                    {
+                                        data: null, title: '查看詳情',
+                                        render: function (data, type, row) {
+
+                                            return "<button id='orderDetail' type='button' value='n[i].id' onclick='orderDetail(\"" + row.id + "\")'>查看詳情</button>";
+                                        }
+                                    },
+
+
+                                ],
+                                lengthMenu: [5, 10, 15, 20],
+                                language: {
+                                    "lengthMenu": "顯示 _MENU_ 筆資料",
+                                    "info": "顯示第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
+                                    "search": "搜尋：",
+                                    "paginate": {
+                                        "next": "下一頁",
+                                        "previous": "上一頁"
+                                    }
+                                }
+
+                            });
+                        // 表頭不換行
+                        $('#result thead tr th').css('white-space', 'nowrap');
+                        table.responsive.recalc();
+                        setTimeout(function () {
+                            table.responsive.recalc();
+                        }, 1000);
+
+
+                    });
+                });
+
+            });
+
+        function orderDetail(id) {
+            if (confirm("確定查看(編號:" + id + ")?")) {
+                $.ajax({
+                    success: function (data) {
+                        window.location.href = "/morari/ProductOrderDetail/selectAllByPdorderid.controller/" + id;
+                    }
+                });
+            } else {
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

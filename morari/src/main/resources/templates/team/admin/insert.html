@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>新增</title>
+	<script type="text/javascript">
+	fetch("/morari/utils/getuid")
+	.then(response => response.text())
+	.then(data => {
+		// console.log(data)
+		document.getElementById("userid").value = data;
+	})
+	
+	
+		window.onload = function () {
+			const form = document.getElementById('insert');
+
+			form.addEventListener('submit', function (event) {
+				event.preventDefault();
+				
+				const formData = Array.from(this.elements).reduce(function (data, element) {
+					if (element.type === "radio") {
+				        if (element.checked) {
+				        	data[element.name] = element.value;
+				        }
+				    } 
+					else if(element.type === "checkbox"){
+				    	if(element.checked){
+				    		data[element.name] = data[element.name] || [];
+				    	    data[element.name].push(element.value);
+				    	}
+				    } 
+					else{
+				        data[element.name] = element.value;
+				    }
+				    return data;
+				}, {});
+
+				const today = new Date();
+				today.setDate(today.getDate() - 1);
+				const startDate = new Date(formData['startdate']);
+				const endDate = new Date(formData['enddate']);
+
+				if (startDate > endDate) {
+					alert("開始日期不可小於結束日起，這不是時間旅行！！！");
+					return;
+				} else if (startDate < today || endDate < today) {
+					alert("抱歉我們無法讓你回到過去，請重新選擇時間");
+					return;
+				}
+				
+				const value = formData['userid'];
+				const data = { uuid: value };
+				delete formData['userid'];
+
+				const json = JSON.stringify(formData);
+				console.log(json);
+
+				var result = confirm("確定要新增本筆資料嗎");
+
+				if (result) {
+
+					fetch('/morari/team/insertMaterial.controller/' + data.uuid , {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: json
+					})
+						.then(function (response) {
+							if (response.status == 200) {
+								location.href = "/morari/team/teammanager.controller";
+							}
+						});
+
+				}
+
+			});
+		}
+	</script>
+</head>
+
+<body>
+	<h3>新增</h3>
+	<form id="insert">
+		發文會員:<input type="text" id="userid" name="userid" readonly><br> 
+		標題:<input type="text" id="title" name="title" placeholder="請輸入想要的標題"><br>
+		起始日期:<input type="date" id="startdate" name="startdate"
+			required><br> 結束日期:<input type="date" id="enddate" name="enddate" required><br>
+		現有人數:<input type="text" id="currentnum" name="currentnum" onkeyup="value=value.replace(/[^\d]/g,'') " required
+			placeholder="請輸入現有人數,僅限數字"><br>
+		接受人數:<input type="text" id="acceptablenum" name="acceptablenum" onkeyup="value=value.replace(/[^\d]/g,'') "
+			required placeholder="請輸入接受人數,僅限數字"><br>
+		露營地點:<input type="text" id="camparea" name="camparea" required placeholder="請輸入露營地點"><br>
+		<input type="hidden" id="pair" name="pair" value="0" required><br>
+		相關資訊：<br>
+		期望性別：<input type="radio" name="gender" value="男生" checked>男生<input type="radio" name="gender" value="女生">女生<input type="radio" name="gender" value="男女皆可">都可以<br>
+		預期住宿：<input type="checkbox" name="lodging" value="帳篷">帳篷<input type="checkbox" name="lodging" value="小木屋">小木屋
+		<input type="checkbox" name="lodging" value="露營車">露營車<br>
+		目前配備：<input type="checkbox" name="equipment" value="帳篷">帳篷<input type="checkbox" name="equipment" value="露營椅">露營椅
+		<input type="checkbox" name="equipment" value="卡式爐">卡式爐<input type="checkbox" name="equipment" value="睡袋">睡袋
+		<input type="checkbox" name="equipment" value="手電筒">手電筒<input type="checkbox" name="equipment" value="桌遊">桌遊<br><br>
+		說點什麼吧！<br><input name="introduction" type="text" style="width: 500px; height: 50px; word-wrap: break-word; overflow-wrap: break-word;">
+		<br>
+		<br>
+		<button type="submit" id="send" value="Send">Send</button>
+	</form>
+
+</body>
+
+</html>

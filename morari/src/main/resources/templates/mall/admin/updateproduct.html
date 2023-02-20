@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+	<script src="/morari/admin/js/head.js"></script>
+
+	<style>
+		td {
+			border: 2px black solid;
+		}
+	</style>
+
+	<!-- sharepage -->
+	<script src="/morari/admin/js/share.js"></script>
+
+	<script>
+		var url = window.location.href;
+		var id = url.split("/").pop();
+		console.log(id);
+		var updatepict;
+	</script>
+
+</head>
+
+<body id="page-top" style="display: none">
+
+	<!-- Page Wrapper -->
+	<div id="wrapper">
+		<!-- sidebar -->
+		<div class="sidebarshare"></div>
+		<!-- sidebar end -->
+
+		<!-- Content Wrapper -->
+		<div id="content-wrapper" class="d-flex flex-column">
+
+			<!-- Main Content -->
+			<div id="content">
+
+				<!-- topbar -->
+				<div class="topbarshare"></div>
+				<!-- topbar end -->
+
+				<!-- Begin Page Content(開始主要內容區塊) -->
+				<div class="container-fluid">
+
+					<form id="formnew">
+						<h3>修改產品</h3>
+						會員ID<br>
+						<input type="text" name="userid" id="userid" readonly="readonly" size="37"><br>
+						產品ID<br>
+						<input type="text" name="pdid" id="pdid" readonly="readonly"><br>
+						產品名稱<br>
+						<input type="text" name="pdname" id="pdname"><br>
+						品牌名稱<br>
+						<input type="text" name="pdtitle" id="pdtitle"><br>
+						產品規格<br>
+						<textarea class="form-control form-control-edit" maxlength="500" id="pdcontent" name="pdcontent" placeholder="About" style=" border-radius: 10px; height: 100px; resize: none; overflow: auto;"></textarea>
+						產品類型<br>
+						<select name="pdtype" id="pdtype">
+							<option>請選擇產品類別</option>
+							<option>睡袋</option>
+							<option>燈具</option>
+							<option>桌椅</option>
+							<option>火爐/炊具</option>
+							<option>保冷箱</option>
+							<option>登山包</option>
+							<option>戶外服裝</option>
+							<option>登山鞋</option>
+							<option>其他</option>
+						</select> <br>
+						<input type="hidden" value='' id="pdpicture" name="pdpicture" />
+						<img src="https://storage.googleapis.com/ryantestpicture/finger" alt="finger"
+							style="max-width: 150px;" id="finger" class="btn">
+						<input type="file" class="form-control-file" id="newjpg" accept="image/*"
+							style="display: none; padding: 0px; border: 0px; border-radius: 5px;">
+						<br>
+						價位<br>
+						<input type="text" name="pdprice" id="pdprice"><br>
+						庫存數量<br>
+						<input type="text" name="pdinventory" id="pdinventory"><br>
+						上架時間<br>
+						<input type="text" name="pddate" id="pddate" readonly="readonly"><br> <br>
+						<input type="button" value="提交" onclick="submitForm()">
+					</form>
+					<table id="result"></table>
+
+				</div>
+				<!-- /.container-fluid(結束主要內容區塊) -->
+
+			</div>
+			<!-- End of Main Content -->
+
+			<!-- Footer -->
+			<div class="footershare"></div>
+			<!-- End of Footer -->
+
+		</div>
+		<!-- End of Content Wrapper -->
+
+	</div>
+	<!-- End of Page Wrapper -->
+
+	<!-- Scroll to Top Button-->
+	<a class="scroll-to-top rounded" href="#page-top">
+		<i class="fas fa-angle-up"></i>
+	</a>
+
+	<!-- Logout Modal-->
+	<div class="loginoutshare"></div>
+
+	<!-- Bootstrap core JavaScript-->
+	<script src="/morari/admin/vendor/jquery/jquery.min.js"></script>
+	<script src="/morari/admin/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+
+	<!-- Core plugin JavaScript-->
+	<script src="/morari/admin/vendor/jquery-easing/jquery.easing.min.js" defer></script>
+
+	<!-- Custom scripts for all pages-->
+	<script src="/morari/admin/js/sb-admin-2.min.js" defer></script>
+
+	<!-- Page level plugins -->
+	<script src="/morari/admin/vendor/chart.js/Chart.min.js" defer></script>
+
+	<!-- Page level custom scripts -->
+	<script src="/morari/admin/js/demo/chart-area-demo.js" defer></script>
+	<script src="/morari/admin/js/demo/chart-pie-demo.js" defer></script>
+
+	<script>
+		$(document).ready(function () {
+			$.ajax({
+				type: 'get',
+				url: '/morari/mall/selectByPdid/' + id,
+				dataType: 'json',
+				success: function (data) {
+					console.log(data);
+					$('#userid').val(data.userid);
+					$('#pdid').val(data.pdid);
+					$('#pdname').val(data.pdname);
+					$('#pdtitle').val(data.pdtitle);
+					$('#pdcontent').val(data.pdcontent);
+					$('#finger').attr('src', data.pdpicture);
+					$('#pdprice').val(data.pdprice);
+					$('#pdinventory').val(data.pdinventory);
+					$('#pddate').val(data.pddate);
+					$('#pdpicture').val(data.pdpicture);
+
+				}
+			});
+		});
+		document.getElementById("finger").addEventListener("click", function () {
+			document.getElementById("newjpg").click();
+		});
+		document.getElementById("newjpg").addEventListener("change", function () {
+			file = this.files[0];
+			console.log(file)
+			let reader = new FileReader();
+			reader.onload = function (e) {
+				document.getElementById("finger").src = e.target.result;
+			};
+			reader.readAsDataURL(file);
+		});
+		$(document).ready(function () {
+			$('input[type="file"]').change(function () {
+				var file = this.files[0];
+				var formData = new FormData();
+				formData.append('file', file);
+				$.ajax({
+					type: 'POST',
+					url: '/morari/uploadpicturetogoogle.controller',
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function (responseData) {
+						console.log(responseData);
+						document.getElementById("pdpicture").value = responseData;
+					}
+				});
+			});
+		});
+		function submitForm() {
+			// 取得表單資料
+			var formData = new FormData(document.getElementById("formnew"));
+			var jsonData = {};
+			for (var [key, value] of formData.entries()) {
+				if (value instanceof File) {
+					continue;
+				}
+				jsonData[key] = value;
+			}
+			$.ajax({
+				type: 'put',
+				url: '/morari/mall/updateByPdid',
+				dataType: 'text',
+				contentType: 'application/json',
+				data: JSON.stringify(jsonData),
+				success: function (data) {
+					alert(data);
+					window.location.href = "/morari/mall/productqueryallmain.controller";
+				}
+			});
+
+		}
+	</script>
+
+</body>
+
+</html>

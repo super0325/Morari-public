@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>promise</title>
+    <script type="text/javascript">
+        window.onload = function () {
+            function showResult(msg) {
+                document.getElementById('result').innerHTML = msg;
+            }
+
+            var promise = new Promise(function (resolve, reject) {
+                var x = 0;
+                if (x == 0) {
+                    resolve('ok');
+                } else {
+                    reject('error');
+                }
+            });
+
+            promise.then(
+                function (value) {
+                    showResult(value);
+                },
+                function (error) {
+                    showResult(error);
+                }
+            );
+        };
+    </script>
+</head>
+
+<body>
+    <div id="result"></div>
+</body>
+
+</html>

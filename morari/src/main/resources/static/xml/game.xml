@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<game>
+	<role>
+		<name>DarkAngel</name>
+		<level>25</level>
+	</role>
+	<role>
+		<name>Pinky</name>
+		<level>35</level>
+	</role>
+</game>

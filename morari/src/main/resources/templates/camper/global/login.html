@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <script src="/morari/admin/js/head.js"></script>
+
+</head>
+
+<body class="bg-gradient-primary">
+
+    <div class="container">
+
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+
+            <div class="col-xl-10 col-lg-12 col-md-9">
+
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+
+                                        <h1 class="h4 text-gray-900 mb-4"> <a href="/morari/home"><img
+                                                    src="/morari/img/camper.png" alt="home"
+                                                    style="max-width: 50px;"></a> Welcome Back!</h1>
+                                    </div>
+                                    <form class="user">
+                                        <div class="form-group">
+                                            <input type="email" class="form-control form-control-user" id="useremail"
+                                                name="email" aria-describedby="emailHelp" placeholder="Enter Email...">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control form-control-user"
+                                                id="userpassword" name="password" placeholder="Password">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck">
+                                                <label class="custom-control-label" for="customCheck">Remember
+                                                    Me</label>
+                                                <p id="errormsg" style="color: red;"></p>
+                                            </div>
+                                        </div>
+                                        <a class="btn btn-primary btn-user btn-block" onclick="submitForm()">
+                                            Login
+                                        </a>
+                                        <hr>
+                                        <a href="/morari/login/oauth2/authorization/google"
+                                            class="btn btn-google btn-user btn-oauth" id="btn-oauth">
+                                            <i class="fab fa-google fa-fw"></i>
+                                        </a>
+                                        <a href="/morari/login/oauth2/authorization/facebook"
+                                            class="btn btn-facebook btn-user btn-oauth" id="btn-oauth">
+                                            <i class="fab fa-facebook-f fa-fw"></i>
+                                        </a>
+                                        <a href="/morari/login/oauth2/authorization/github"
+                                            class="btn btn-github btn-user btn-oauth" id="btn-oauth">
+                                            <i class="fab fa-github fa-fw"></i>
+                                        </a>
+                                        <a class="btn  btn-user btn-oauth" id="btn-key"
+                                        style="background-color: rgb(210, 156, 57);">
+                                        <i class="fas fa-comment-medical" style="color: white;"></i>
+                                    </a>
+                                    </form>
+                                    <hr>
+                                    <div class="text-center">
+                                        <a class="small" href="/morari/forgotpassword">Forgot Password?</a>
+                                    </div>
+                                    <div class="text-center">
+                                        <a class="small" href="/morari/register">Create an Account!</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/morari/admin/vendor/jquery/jquery.min.js"></script>
+    <script src="/morari/admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/morari/admin/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="/morari/admin/js/sb-admin-2.min.js"></script>
+
+    <script>
+
+let key = document.getElementById("btn-key");
+        key.addEventListener("click", () => {
+            document.getElementById("useremail").value= "hellowmoraritest1@camp.com";
+            document.getElementById("userpassword").value="zxcvzxcvzxcv";
+        });
+
+        // 擷取錯誤訊息
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        };
+        var error = getUrlParameter('error');
+        if (error === 'user_not_authorized') {
+            document.getElementById("errormsg").innerHTML = "user not authorized, please contact us.";
+        }
+
+        function submitForm() {
+            const data = {
+                email: document.getElementById("useremail").value,
+                password: document.getElementById("userpassword").value,
+                rememberMe: document.getElementById("customCheck").checked
+            }
+
+            fetch("/morari/api/auth/authenticate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+                .then(
+                    response => {
+
+                        if (response.status === 201) {
+                            // success
+                            window.location.href = '/morari/home';
+                        } else if (response.status === 401) {
+                            document.getElementById("errormsg").innerHTML = "Invalid Email or Password";
+                        }else if (response.status === 403) {
+                            document.getElementById("errormsg").innerHTML = "ser not authorized, please contact us.";
+                        }else {
+                            document.getElementById("errormsg").innerHTML = "login failed";
+                        }
+                    })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        }
+    </script>
+
+</body>
+
+</html>

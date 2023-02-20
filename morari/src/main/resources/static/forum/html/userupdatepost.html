@@ -1,0 +1,82 @@
+<div class="container">
+	<p class="help-block text-danger"></p>
+	<form>
+		<input type="submit" formaction="/morari/forum" value="回論壇">
+		<input type="submit" formaction="/morari/forum/showpostbyuserid.controller" value="回個人貼文">
+	</form>
+	<p class="help-block text-danger"></p>
+	<div>
+		<label>*標題</label>
+		<input type="text" class="form-control" name="title" id="title" maxlength="30">
+		<p class="help-block text-danger"></p>
+	</div>
+	<div>
+		<label>*內容</label>
+		<textarea name="content" class="form-control" id="postcontent" rows="10"></textarea>
+		<p class="help-block text-danger"></p>
+	</div>
+	<div>
+		<label>照片:</label>
+		<input type="file" name="newpicture" id="newpicture"><br>
+		<img alt="" id="picture" width="50%">
+		<p class="help-block text-danger"></p>
+	</div>
+	<div class="form-row">
+		<div class="control-group col-sm-6">
+			<label>開始露營日期</label>
+			<input type="date" class="form-control" name="startDate" id="startDate">
+			<p class="help-block text-danger"></p>
+		</div>
+		<div class="control-group col-sm-6">
+			<label>結束露營日期</label>
+			<input type="date" class="form-control" name="endDate" id="endDate">
+			<p class="help-block text-danger"></p>
+		</div>
+	</div>	
+	<div class="form-row">
+		<div class="control-group col-sm-6">
+			<label>露營人數</label>
+			<select class="custom-select" name="people" id="people"></select>
+			<p class="help-block text-danger"></p>
+		</div>
+		<div class="control-group col-sm-6">
+			<label>露營費用</label>
+			<input type="number" class="form-control" name="price" id="price" min="1">
+			<p class="help-block text-danger"></p>
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="control-group col-sm-6">
+			<label>露營城市</label>
+			<select class="custom-select" name="county" id="county"></select>
+			<p class="help-block text-danger"></p>
+		</div>
+		<div class="control-group col-sm-6">
+			<label>評分</label>
+			<select class="custom-select" name="score" id="score"></select>
+			<p class="help-block text-danger"></p>
+		</div>
+	</div>
+	<div>
+		<br>
+		<label>最後更新日期:</label>
+		<input type="text" class="form-control" name="releaseDate" id="releaseDate" disabled>
+		<p class="help-block text-danger"></p>
+	</div>
+	<div class="form-row">
+		<div class="control-group col-sm-6">
+			<label>喜歡本貼文人數:</label>
+			<input type="text" class="form-control" name="userLike" id="userLike" disabled>
+			<p class="help-block text-danger"></p>
+		</div>
+		<div class="control-group col-sm-6">	
+			<label>不喜歡本貼文人數:</label>
+			<input type="text" class="form-control" name="userUnlike" id="userUnlike" disabled>
+			<p class="help-block text-danger"></p>
+		</div>
+	</div>
+	<div>
+		<div id="hidepost" style="float: left; margin: 0px 4px 0px 0px;"></div>
+		<input type="button" value="修改完成" id="sub">
+	</div><hr>
+</div>

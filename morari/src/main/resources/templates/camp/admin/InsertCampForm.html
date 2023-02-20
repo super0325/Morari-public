@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <script src="/morari/admin/js/head.js"></script>
+
+    <!-- sharepage -->
+    <script src="/morari/admin/js/share.js"></script>
+
+</head>
+
+<body id="page-top" style="display: none">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- sidebar -->
+        <div class="sidebarshare"></div>
+        <!-- sidebar end -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- topbar -->
+                <div class="topbarshare"></div>
+                <!-- topbar end -->
+
+                <!-- Begin Page Content(開始主要內容區塊) -->
+                <div class="container-fluid">
+
+                    <div class="long"><b>═══ 新增營地 ═══</b></div>
+
+                    <hr>
+                    <br>
+
+                    <form id="form" method="post" enctype="multipart/form-data"></form>
+
+                </div>
+                <!-- /.container-fluid(結束主要內容區塊) -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div class="footershare"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="loginoutshare"></div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/morari/admin/vendor/jquery/jquery.min.js"></script>
+    <script src="/morari/admin/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/morari/admin/vendor/jquery-easing/jquery.easing.min.js" defer></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="/morari/admin/js/sb-admin-2.min.js" defer></script>
+    
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $(document).ready(function () {
+                var form = $('#form');
+                $.getJSON('/morari/admin/camp/indexShowAllCamp.controller', function (data) {
+                    var cityList = data["cityList"];
+                    var tagList = data["tagList"];
+
+
+                    var radio = '';
+                    $.each(cityList, function (i, n) {
+                        radio += '<input type="radio" name="cityID" value="' + n.cityID + '" />' + n.cityName
+                    });
+
+                    var tags = '';
+                    $.each(tagList, function (i, n) {
+                        tags += '<input type="checkbox" name="tagID" value="' + n.tagID + '" />' + n.tagName
+                    });
+
+
+                    var div = '';
+
+                    div = '營地名: <input type="text" id="campName" name="campName" placeholder="營地名" ><span id="errorcampName" style="color: red;"></span><br>'
+                        + '縣市選項:' + radio + '<span id="errorcityID" style="color: red;"></span><br>'
+                        + '地址: <input type="text" id="location" name="location" placeholder="地址" ><span id="errorlocation" style="color: red;"></span><br>'
+                        + '簡介: <input type="text" id="description" name="description" placeholder="描述"><br>'
+                        + '<img src="" id="showimg">'
+                        + '上傳圖片: <input type="file" name="campPicturesPath" id="campPicturesPath"><span id="errorcampPicturesPath" style="color: red;"></span><br>'
+                        + '標籤選項:' + tags + '<span id="errortagIDs" style="color: red;"></span><br>'
+                        + '<button id="one" style="border:none;background-color:transparent" type="button"><span><a href="#" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-plus"></i></span><span class="text">一鍵輸入</span></a></span></button>'
+                        + '<button id="send" style="border:none;background-color:transparent" type="button"><span><a href="#" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-plus"></i></span><span class="text">營地新增</span></a></span></button><span id="errornone" style="color: red;"></span>'
+                    form.append(div);
+
+                    $('.long').width('400px').css("font-size", "25px").css("color", "SaddleBrown");
+                });
+
+                $('body').on('click', '#send', function () {
+                    // console.log(form);
+                    // console.log(form.get(0));
+                    var formData = new FormData(form.get(0));
+                    $.ajax({
+                        url: '/morari/admin/camp/insertCamp.controller',
+                        type: 'post',
+                        data: formData,
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        success: function (after) {
+
+                            $("#errorcampName").empty();
+                            $("#errorcampPicturesPath").empty();
+                            $("#errorcityID").empty();
+                            $("#errorlocation").empty();
+                            $("#errortagIDs").empty();
+                            $("#errornone").empty();
+
+                            if (after.error == 'true') {
+                                $("#errorcampName").append(after.campName);
+                                $("#errorcampPicturesPath").append(after.campPicturesPath);
+                                $("#errorcityID").append(after.cityID);
+                                $("#errorlocation").append(after.location);
+                                $("#errortagIDs").append(after.tagIDs);
+                                return;
+                            }
+                            else if (after.error == 'none') {
+                                $("#errornone").append(after.noData);
+                                return;
+                            }
+                            else {
+                                alert('新增成功!! 營地編號: ' + after.campID);
+
+                                $("#form").empty();
+                                var form = $('#form');
+                                var div = '';
+
+                                var tagNames = '';
+                                after.tags.forEach(element => {
+                                    tagNames += element.tagName + ' /'
+                                });
+
+
+                                div = '營地編號: <input type="text" name="campID" readonly="readonly" value="' + after.campID + '"><br>'
+                                    + '營地名: <input type="text" name="campName" value="' + after.campName + '"><br>'
+                                    + '縣市名: <input type="text" name="city.cityName" readonly="readonly"value="' + after.city.cityName + '"><br>'
+                                    + '地址: <input type="text" name="location" value="' + after.location + '"><br>'
+                                    + '簡介: <input type="text" name="description" value="' + after.description + '"><br>'
+                                    + '圖片: <img src="' + after.campPicturesPath + '"><br>'
+                                    + '標籤: ' + tagNames + '<br>'
+                                form.append(div);
+
+                                $('img').width('100px').height('100px');
+                            }
+                        }
+                    });
+                });
+
+                $('body').on('click', '#one', function () {
+                    $('#campName').val('新增範例營地');
+                    $('#location').val('新增範例地址');
+                    $('#description').val('新增範例簡介');
+                });
+
+                $('body').on('change', '#campPicturesPath', function () {
+                    file = this.files[0];
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        $("#showimg").attr("src", e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                    $('img').width('100px').height('100px');
+                });
+
+            });
+        });
+    </script>
+
+</body>
+
+</html>

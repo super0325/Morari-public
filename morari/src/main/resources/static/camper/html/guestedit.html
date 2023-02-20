@@ -1,0 +1,136 @@
+<form class="user" id="usereditform" style="margin: 10px;" action="" method="post">
+   
+        <!-- uid和大頭貼 -->
+        <div class="text-center">
+            <div class="row">
+                <div class="col-lg-4">
+                    <img src="" alt="shot" style="max-width: 150px;" id="shotimg" class="btn">
+                    <input type="file" class="form-control-file" id="shotInput" accept="image/*"
+                        style="display: none; padding: 0px; border: 0px; border-radius: 5px;">
+                </div>
+                <div class="col-lg-8 title-uid">
+                    <h1 class="h4 text-gray-900 mb-4" id="titleuid"></h1>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="uid" id="uid" value="">
+        <input type="hidden" name="shot" id="shot" value="">
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="p-5">
+                <input type="date" class="form-control form-control-edit" id="registerdata" name="registerdata"
+                    placeholder="Registerdata" style="display: none;">
+                <!-- 帳號(email) -->
+                <div class="row mb-3">
+                    <p style="color: #776551;"> Email</p>
+                    <input type="email" class="form-control form-control-edit" id="email" name="email"
+                        placeholder="Email" readonly >
+                </div>
+                <!-- nickname -->
+                <div class="row mb-3">
+                    <p style="color: #776551;"> Nickname</p>
+                    <input type="text" class="form-control form-control-edit" id="nickname" name="nickname"
+                        placeholder="Nickname">
+                </div>
+                <!-- 姓名 -->
+                <div class="row mb-0">
+                    <!-- firstname -->
+                    <div class="col-sm-6" style="padding-left: 0; padding-right: 0;">
+                        <p style="color: #776551;"> Firstname</p>
+                        <input type="text" class="form-control form-control-edit" id="firstname" name="firstname"
+                            placeholder="Firstname">
+                    </div>
+                    <!-- lastname -->
+                    <div class="col-sm-6" style="padding-left: 0; padding-right: 0;">
+                        <p style="color: #776551;"> Lastname</p>
+                        <input type="text" class="form-control form-control-edit" id="lastname" name="lastname"
+                            placeholder="Lastname">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="p-5">
+                <!-- address -->
+                <div class="row mb-3">
+                    <p style="color: #776551;"> Address</p>
+                    <input type="text" class="form-control form-control-edit" id="address" name="address"
+                        placeholder="Address">
+                </div>
+                <!-- phone and birthday -->
+                <div class="row mb-3">
+                    <!-- phone -->
+                    <div class="col-sm-6" style="padding-left: 0; padding-right: 0;">
+                        <p style="color: #776551;"> Phone</p>
+                        <input type="tel" class="form-control form-control-edit" id="phone" name="phone"
+                            placeholder="Phone">
+                    </div>
+                    <!-- birthday -->
+                    <div class="col-sm-6" style="padding-left: 0; padding-right: 0;">
+                        <p style="color: #776551;"> Birthday</p>
+                        <input type="date" class="form-control form-control-edit" id="birthday" name="birthday"
+                            placeholder="Birthday">
+                    </div>
+                </div>
+                <!-- gender subscribed-->
+                <div class="row mb-0">
+                    <!-- gender -->
+                    <div class="col-sm-6" style="padding-left: 0; padding-right: 0;">
+                        <p style="color: #776551;"> Gender</p>
+                        <select class="form-control form-control-edit" id="gender" name="gender">
+                            <option value="1">男性</option>
+                            <option value="2">女性</option>
+                            <option value="3">雙性</option>
+                            <option value="4">無性</option>
+                            <option value="0">不公開</option>
+                        </select>
+                    </div>
+                    <!-- subscribed -->
+                    <div class="mb-3 col-sm-6" style="padding-left: 0; padding-right: 0;">
+                        <p style="color: #776551;"> Subscribed</p>
+                        <select class="form-control form-control-edit" id="subscribed" name="subscribed">
+                            <option value="true">已訂閱</option>
+                            <option value="false">未訂閱</option>
+                        </select>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+    <!-- level and exp -->
+    <div class=" row mb-3">
+        <!-- level -->
+        <div class="col-sm-4" style="padding-left: 0; padding-right: 0;">
+            <p style="color: #776551;"> Level</p>
+            <input type="number" class="form-control form-control-edit" id="level" name="level" placeholder="Level" readonly >
+        </div>
+        <!-- exp -->
+        <div class="col-sm-4" style="padding-left: 0; padding-right: 0;">
+            <p style="color: #776551;"> Exp</p>
+            <input type="number" class="form-control form-control-edit" id="exp" name="exp" placeholder="Exp" readonly >
+        </div>
+        <!-- point -->
+        <div class="col-sm-4" style="padding-left: 0; padding-right: 0;">
+            <p style="color: #776551;"> Point</p>
+            <input type="number" class="form-control form-control-edit" id="point" name="point" placeholder="Point" readonly >
+        </div>
+    </div>
+    <!-- about -->
+    <div class="row mb-3">
+        <p style="color: #776551;"> About</p>
+        <textarea class="form-control form-control-edit" maxlength="500" id="about" name="about" placeholder="About"
+            style=" border-radius: 10px; height: 100px; resize: none; overflow: auto;">
+        </textarea>
+    </div>
+
+    <p id="errormsg" style="color: red;"></p>
+    <a class="btn btn-primary btn-user btn-block" id="saveedit" onclick="saveedit()">
+        save
+    </a>
+</form>

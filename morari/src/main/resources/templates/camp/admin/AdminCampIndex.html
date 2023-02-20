@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+	<script src="/morari/admin/js/head.js"></script>
+
+	<!-- sharepage -->
+	<script src="/morari/admin/js/share.js"></script>
+	
+	<link rel="stylesheet" href="/morari/admin/css/dataTable.css">
+
+</head>
+
+<body id="page-top" style="display: none">
+
+	<!-- Page Wrapper -->
+	<div id="wrapper">
+		<!-- sidebar -->
+		<div class="sidebarshare"></div>
+		<!-- sidebar end -->
+
+		<!-- Content Wrapper -->
+		<div id="content-wrapper" class="d-flex flex-column">
+
+			<!-- Main Content -->
+			<div id="content">
+
+				<!-- topbar -->
+				<div class="topbarshare"></div>
+				<!-- topbar end -->
+
+				<!-- Begin Page Content(開始主要內容區塊) -->
+				<div class="container-fluid">
+
+					<form id="cityform" method="post">
+						<table class="card mb-4 py-3 border-left-info" id="citytable"></table>
+					</form>
+
+					<hr>
+
+					<table id="camptable" class="table is-striped" style="width:100%"></table>
+
+					<hr>
+
+					<div>
+						<span>
+							<a href="/morari/admin/camp/insertPage.controller"
+								class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i
+										class="fas fa-plus"></i></span><span class="text">營地新增</span></a>
+						</span>
+					</div>
+
+				</div>
+				<!-- /.container-fluid(結束主要內容區塊) -->
+
+			</div>
+			<!-- End of Main Content -->
+
+			<!-- Footer -->
+			<div class="footershare"></div>
+			<!-- End of Footer -->
+
+		</div>
+		<!-- End of Content Wrapper -->
+
+	</div>
+	<!-- End of Page Wrapper -->
+
+	<!-- Scroll to Top Button-->
+	<a class="scroll-to-top rounded" href="#page-top">
+		<i class="fas fa-angle-up"></i>
+	</a>
+
+	<!-- Logout Modal-->
+	<div class="loginoutshare"></div>
+
+	<!-- Bootstrap core JavaScript-->
+	<script src="/morari/admin/vendor/jquery/jquery.min.js"></script>
+	<script src="/morari/admin/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+
+	<!-- Core plugin JavaScript-->
+	<script src="/morari/admin/vendor/jquery-easing/jquery.easing.min.js" defer></script>
+
+	<!-- Custom scripts for all pages-->
+	<script src="/morari/admin/js/sb-admin-2.min.js" defer></script>
+
+
+	
+
+	
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> -->
+	<!-- datatables js -->
+	<script src="/morari/admin/vendor/datatables/datatables13.js"></script>
+	<script src="/morari/admin/vendor/datatables/datatableresponsive.js"></script>
+	
+
+	<script type="text/javascript">
+		$(function () {
+			$(document).ready(function () {
+				$.getJSON('/morari/admin/camp/indexShowAllCamp.controller', function (data) {
+
+					var cityList = data["cityList"];
+					var citytable = $('#citytable');
+					var citys = '';
+					var citytr = '';
+					citytable.append('<thead><th class="long"><b>═══縣市查詢營地═══</b></th></thead>')
+					$.each(cityList, function (i, n) {
+						citys += '<input id="checkcity" type="checkbox" name="cityID" value="' + n.cityID + '" />' + n.cityName
+					});
+					citytr += '<tbody><tr><td class="longlong">' + citys + '</td><td class="longlongbtn"><input type="submit" value="查詢"><span id="errorcityIDs" style="color: red;"></span></td></tr></tbody>'
+					citytable.append(citytr);
+
+					$('#cityform').on('submit', function (e) {
+						e.preventDefault();
+						var checkboxValues = [];
+						$('input[name="cityID"]:checked').each(function () {
+							checkboxValues.push($(this).val());
+						});
+						var jsonData = JSON.stringify(checkboxValues);
+						$.ajax({
+							url: '/morari/admin/camp/queryCampsByCityIDs.controller',
+							type: 'post',
+							data: jsonData,
+							dataType: 'json',
+							contentType: 'application/json',
+							success: function (QueryByCityIDsResult) {
+								$("#errorcityIDs").empty();
+
+								if (QueryByCityIDsResult.error == 'true') {
+									$("#errorcityIDs").append(QueryByCityIDsResult.cityIDs);
+									return;
+								}
+								else if (QueryByCityIDsResult.error == 'none') {
+									$("#errorcityIDs").append(QueryByCityIDsResult.noData);
+									var table = $("#camptable").DataTable();
+									table.destroy();
+									$("#camptable").empty();
+									return;
+								}
+								else {
+									var table = $("#camptable").DataTable();
+									table.destroy();
+									$('#camptable').DataTable({
+										"data": QueryByCityIDsResult,
+										"columns": [
+											{ data: 'campID', title: "營地編號", width: "120px", responsivePriority: 10 },
+											{
+												data: 'campName',
+												title: "營地名",
+												width: "100px",
+												render: function (data, type, row) {
+													return '<a href="#" class="td2">' + data + '</a>';
+												},
+												responsivePriority: 9
+											},
+											{ data: 'city.cityName', title: "城市名", width: "100px", responsivePriority: 8 },
+											{ data: 'location', title: "地點", responsivePriority: 7 },
+											{
+												data: 'campPicturesPath',
+												title: "圖片",
+												width: "100px",
+												render: function (data, type, row) {
+													return '<img src="' + data + '"/>';
+												},
+												responsivePriority: 6
+											},
+											{ data: 'description', title: "描述", width: "100px", responsivePriority: 5 },
+											{
+												data: 'description',
+												title: "更新",
+												width: "100px",
+												render: function (data, type, row) {
+													return '<button class=\"datatable_edit_button\" id="update" type="button" name="campID" value="' + row.campID + '"><i class=\"fas fa-sliders-h\"></i></button>';
+												},
+												responsivePriority: 3
+											},
+											{
+												data: 'description',
+												title: "刪除",
+												width: "100px",
+												render: function (data, type, row) {
+													return '<button class=\"datatable_del_button\" id="delete" type="button" name="campID" value="' + row.campID + '"><i class=\"fas fa-trash-alt\"></i></button>';
+												},
+												responsivePriority: 2
+											},
+											{
+												data: 'description',
+												title: "新增營位",
+												width: "100px",
+												render: function (data, type, row) {
+													return '<button style="border:none;background-color:transparent" id="insertsite" type="button" name="campID" value="' + row.campID + '"><a href="#" class="btn btn-success btn-circle btn-lg"><i class="fas fa-plus"></i></a></button>';
+												},
+												responsivePriority: 1
+											},
+
+										],
+										responsive: true,
+										lengthMenu: [5, 10, 15, 20],
+										language: {
+											"lengthMenu": "顯示_MENU_ 筆資料",
+											"info": "第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
+											"search": "搜尋：",
+											"paginate": {
+												"previous": " 上一頁__",
+												"next": "__下一頁"
+											}
+										}
+									});
+								}
+							}
+						});
+					});
+
+
+					var allCamps = data["allCamps"];
+					$('#camptable').DataTable({
+						"data": allCamps,
+						"columns": [
+							{ data: 'campID', title: "營地編號", width: "120px", responsivePriority: 10 },
+							{
+								data: 'campName',
+								title: "營地名",
+								width: "100px",
+								render: function (data, type, row) {
+									return '<a href="#" class="td2">' + data + '</a>';
+								},
+								responsivePriority: 9
+							},
+							{ data: 'city.cityName', title: "城市名", width: "100px", responsivePriority: 8 },
+							{ data: 'location', title: "地點", responsivePriority: 7 },
+							{
+								data: 'campPicturesPath',
+								title: "圖片",
+								width: "100px",
+								render: function (data, type, row) {
+									return '<img src="' + data + '"/>';
+								},
+								responsivePriority: 6
+							},
+							{ data: 'description', title: "描述", width: "100px", responsivePriority: 5 },
+							{
+								data: 'description',
+								title: "更新",
+								width: "100px",
+								render: function (data, type, row) {
+									return '<button class=\"datatable_edit_button\" id="update" type="button" name="campID" value="' + row.campID + '"><i class=\"fas fa-sliders-h\"></i></button>';
+								},
+								responsivePriority: 3
+							},
+							{
+								data: 'description',
+								title: "刪除",
+								width: "100px",
+								render: function (data, type, row) {
+									return '<button class=\"datatable_del_button\" id="delete" type="button" name="campID" value="' + row.campID + '"><i class=\"fas fa-trash-alt\"></i></button>';
+								},
+								responsivePriority: 2
+							},
+							{
+								data: 'description',
+								title: "新增營位",
+								width: "100px",
+								render: function (data, type, row) {
+									return '<button style="border:none;background-color:transparent" id="insertsite" type="button" name="campID" value="' + row.campID + '"><a href="#" class="btn btn-success btn-circle"><i class="fas fa-plus"></i></a></button>';
+								},
+								responsivePriority: 1
+							},
+
+						],
+						responsive: true,
+						lengthMenu: [5, 10, 15, 20],
+						language: {
+							"lengthMenu": "顯示_MENU_ 筆資料",
+							"info": "第 _START_ 至 _END_ 筆資料，共 _TOTAL_ 筆",
+							"search": "搜尋：",
+							"paginate": {
+								"previous": " 上一頁__",
+								"next": "__下一頁"
+							}
+						}
+
+					});
+
+
+					// var camptable = $('#camptable');
+					// var camptr = '';
+					// camptable.append('<thead><th>營地編號</th><th>營地名</th><th>城市名</th><th>圖片</th><th>描述</th><th>地點</th><th>標籤</th><th>更新</th><th>刪除</th><th>新增營區位</th></thead>')
+					// $.each(allCamps, function (i, n) {
+					// 	var tagNames = '';
+					// 	n.tags.forEach(element => {
+					// 		tagNames += element.tagName + ' /<br>'
+					// 	});
+					//
+					// 	camptr = '<tbody class="card mb-4 py-3 border-bottom-dark">'
+					// 		+ '<tr>'
+					// 		+ '<td>' + n.campID + '</td>'
+					// 		+ '<td class="td2"><a href="#">' + n.campName + '</a></td>'
+					// 		+ '<td>' + n.city.cityName + '</td>'
+					// 		+ '<td>' + '<img id="img" src="/morari/images/' + n.campPicturesPath + '">' + '</td>'
+					// 		+ '<td>' + n.description + '</td>'
+					// 		+ '<td>' + n.location + '</td>'
+					// 		+ '<td>' + tagNames + '</td>'
+					// 		+ '<td>'
+					// 		+ '<button style="border:none;background-color:transparent" id="update" type="button" name="campID" value="' + n.campID + '"><a href="#" class="btn btn-warning btn-circle"><i class="fas fa-user-edit"></i></a></button>'
+					// 		+ '</td>'
+					// 		+ '<td>'
+					// 		+ '<button style="border:none;background-color:transparent" id="delete" type="button" name="campID" value="' + n.campID + '"><a href="#" class="btn btn-danger btn-circle"><i class="fas fa-trash-alt"></i></a></button>'
+					// 		+ '</td>'
+					// 		+ '<td>'
+					// 		+ '<button style="border:none;background-color:transparent" id="insertsite" type="button" name="campID" value="' + n.campID + '"><a href="#" class="btn btn-success btn-circle"><i class="fas fa-plus"></i></a></button>'
+					// 		+ '</td>'
+					// 		+ '</tr>'
+					// 		+ '</tbody>'
+					// 	camptable.append(camptr);
+					//
+					// });
+
+					$('#inputid').width('100px').css("margin-left", "25px");
+					$('th').width('90px').css("text-align", "center");
+					$('td').width('90px').css("text-align", "center");
+					$('img').width('85px').height('85px');
+					$('input[name="cityID"]').width('20px').css("text-align", "center");
+					$('.long').width('200px').css("font-size", "18px").css("color", "SaddleBrown");
+					$('.longlong').width('380px');
+					$('.longlongbtn').width('150px');
+				});
+
+				$('#camptable').on('click', '.td2', function () {
+					var $row = $(this).closest('tr');
+					var campID = $row.find('td:first-child').text();
+					sessionStorage.setItem("campID", JSON.stringify(campID));
+					window.location.href = '/morari/admin/camp/SitesOfCamp';
+				});
+
+				$('#camptable').on('click', '#update', function () {
+					if (confirm("確定更新?")) {
+						alert("更新!!");
+						var campID = $(this).val();
+						sessionStorage.setItem("campID", JSON.stringify(campID));
+						window.location.href = '/morari/admin/camp/UpdateCampByIDForm';
+					}
+					else {
+						alert("取消更新!");
+						return false;
+					}
+				});
+
+				$('#camptable').on('click', '#delete', function () {
+					if (confirm("確定刪除?")) {
+						alert("刪除!!");
+						var campID = $(this).val();
+						var cj = JSON.stringify(campID);
+						var deletebody = $(this).parent().parent().parent();
+						$.ajax({
+							url: '/morari/admin/camp/deleteCampByID.controller',
+							type: 'post',
+							data: cj,
+							contentType: 'application/json',
+							success: function (deleteResult) {
+								alert('營地:' + campID + ' 成功刪除');
+								deletebody.empty();
+							}
+						});
+					}
+					else {
+						alert("取消刪除!");
+						return false;
+					}
+				});
+
+				$('#camptable').on('click', '#insertsite', function () {
+					var campID = $(this).val();
+					sessionStorage.setItem("campID", JSON.stringify(campID));
+					window.location.href = '/morari/admin/camp/insertSitePage.controller';
+				});
+
+
+			});
+		});
+	</script>
+
+</body>
+
+</html>

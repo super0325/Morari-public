@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <script src="/morari/guest/js/head.js"></script>
+  <!-- sharepage 公用頁面 -->
+  <script src="/morari/guest/js/share.js"></script>
+</head>
+
+<body style="display: none">
+  <!-- Header Section Start -->
+  <div class="header"></div>
+  <!-- Header Section End -->
+  <div class="wrapper">
+
+
+    <!-- Room Section Start -->
+    <div id="rooms">
+      <div class="container">
+        <div class="section-header">
+          <h2 style="color: brown;">═══ 預約營區 ═══</h2>
+          <p>
+            「Morari」是一個網路平台，致力於統合全台的露營地資訊，提供使用者方便快速的露營地查詢、預約和結帳服務。我們致力於打造一個簡化且優質的使用者體驗，讓露營不再是困難的選擇。體驗一次輕鬆愉快的露營生活，就在「Morari」。
+          </p>
+        </div>
+
+        <hr>
+
+        <iframe src="/morari/camp/fullCalendar" scrolling="no" frameborder="0" width="800" height="500"
+          style="margin: 0 auto; display: block;"></iframe>
+
+        <hr>
+
+        <div class="row" id="siterow"></div>
+
+      </div>
+    </div>
+    <!-- Room Section End -->
+
+    <!-- 分離範例 -->
+    <!-- <div class="test"></div>
+  <script src="/morari/camper/js/test.js"></script> -->
+
+
+
+
+
+
+  </div>
+  <!-- Footer Section Start -->
+  <div class="footer"></div>
+  <!-- Footer Section End -->
+
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+
+  <!-- Vendor JavaScript File -->
+  <script src="/morari/guest/vendor/jquery/jquery.min.js"></script>
+  <script src="/morari/guest/vendor/jquery/jquery-migrate.min.js" defer></script>
+  <script src="/morari/guest/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+  <script src="/morari/guest/vendor/easing/easing.min.js" defer></script>
+  <script src="/morari/guest/vendor/stickyjs/sticky.js" defer></script>
+  <script src="/morari/guest/vendor/superfish/hoverIntent.js" defer></script>
+  <script src="/morari/guest/vendor/superfish/superfish.min.js" defer></script>
+  <script src="/morari/guest/vendor/wow/wow.min.js" defer></script>
+  <script src="/morari/guest/vendor/slick/slick.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/moment.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/moment-timezone.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/tempusdominus-bootstrap-4.min.js" defer></script>
+
+  <!-- Booking Javascript File -->
+  <script src="/morari/guest/js/booking.js" defer></script>
+  <script src="/morari/guest/js/jqBootstrapValidation.min.js" defer></script>
+
+  <!-- Main Javascript File -->
+  <script src="/morari/guest/js/main.js" defer></script>
+
+
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $(document).ready(function () {
+        var campID = JSON.parse(sessionStorage.getItem("campID"));
+        $.getJSON('/morari/admin/camp/sitesOfCamp.controller/' + campID, function (data) {
+          var siterow = $('#siterow');
+          var tmp = '';
+
+          siterow.append('<div class="control-group col-sm-6"><label>Check - In</label><input type="date" class="form-control" name="goingdate"/><p class="help-block text-danger"></p></div>');
+
+          siterow.append('<div class="control-group col-sm-6"><label>Check - Out</label><input type="date" class="form-control" name="leavingdate"/><p class="help-block text-danger"></p></div>');
+
+          $.each(data, function (i, n) {
+            tmp = '<div class="col-md-12 room" id="order' + n.siteID + '">'
+              + '<div class="row">'
+              + '<div class="col-md-6">'
+
+              + '<div class="room-img">'
+              + '<img width="90%" height="90%" src="' + n.sitePicturesPath + '">'
+              + '</div>'
+
+              + '</div>'
+              + '<div class="col-md-6">'
+              + '<div class="room-des">'
+              + '<input name="siteID" type="hidden" value="' + n.siteID + '">'
+              + '<h3 >' + n.siteName + '</h3><span class="errorsiteID" style="color: red;"></span>'
+              + '<h1 name="unitPrice">$' + n.siteMoney + '<span>/Night</span ></h1 > '
+              + '<ul class="room-size">'
+              + '<li><i class="fa fa-arrow-right"></i>Total&nbsp;:&nbsp;' + n.totalSites + '</li>'
+              + '</ul>'
+              + '<ul class="room-icon" >'
+              + '<li class="icon-1"></li>'
+              + '<li class="icon-4"></li>'
+              + '<li class="icon-5"></li>'
+              + '<li class="icon-7"></li>'
+              + '<li class="icon-8"></li>'
+              + '<li class="icon-9"></li>'
+              + '</ul >'
+
+              + '<div name="numbers" class="control-group col-sm-6">'
+              + '<label>Numbers</label>'
+              + '<input class="form-control" name="num" type="number" min="0" step="1" value="0"><span class="errornumbers" style="color: red;"></span>'
+              + '<p class="help-block text-danger"></p>'
+              + '</div>'
+
+              + '</div>'
+              + '</div >'
+              + '</div >'
+              + '</div>'
+              + '</div>'
+
+            siterow.append(tmp);
+          });
+
+          siterow.append('<div class="room-link"><button id="addOrder" style="border:none;background-color:transparent" type="button"><a href="#">結帳</a></button><span id="errordate" style="color: red;"></span><span id="errornone" style="color: red;"></span></div>');
+
+          $("#addOrder").css("display", "inline-block");
+          $(".room-link").css("text-align", "center");
+        });
+
+
+        $('body').on('click', '#addOrder', function () {
+
+          let siteIds = [];
+          let nums = [];
+          let orderItems = $('div[id^="order"]');
+
+          $.each(orderItems, function (index, orderItem) {
+            let siteId = $($(orderItem).find('input[name="siteID"]').get(0)).val();
+            let num = $($(orderItem).find('input[name="num"]').get(0)).val();
+            siteIds.push(siteId);
+            nums.push(num);
+          });
+
+          let goingdate = $($('#siterow').find('input[name="goingdate"]').get(0)).val();
+          let leavingdate = $($('#siterow').find('input[name="leavingdate"]').get(0)).val();
+
+          var formData = new FormData();
+          formData.append('siteIds', siteIds);
+          formData.append('nums', nums);
+          formData.append('goingdate', goingdate);
+          formData.append('leavingdate', leavingdate);
+          formData.append('campID', campID);
+
+          $.ajax({
+            url: '/morari/camp/insertOrderByGuest',
+            type: 'post',
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (after) {
+              $(".errorsiteID").empty();
+              $(".errornumbers").empty();
+              $("#errordate").empty();
+              $("#errornone").empty();
+
+              console.log(after)
+              if (after.error == 'true') {
+                $(".errorsiteID").append(after.siteIds);
+                $(".errornumbers").append(after.nums);
+                $("#errordate").append(after.timeString);
+                return;
+              }
+              else if (after.error == 'none') {
+                $("#errornone").append(after.noData);
+                return;
+              }
+              else {
+                $("#siterow").empty();
+                $("#siterow").append(after);
+              }
+            }
+          });
+        });
+      });
+    });
+  </script>
+
+</body>
+
+</html>

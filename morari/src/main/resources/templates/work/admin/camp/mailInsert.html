@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <script src="/morari/admin/js/head.js"></script>
+
+    <!-- sharepage -->
+    <script src="/morari/admin/js/share.js"></script>
+
+</head>
+
+<body id="page-top" style="display: none">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- sidebar -->
+        <div class="sidebarshare"></div>
+        <!-- sidebar end -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- topbar -->
+                <div class="topbarshare"></div>
+                <!-- topbar end -->
+
+                <!-- Begin Page Content(開始主要內容區塊) -->
+                <div class="container-fluid">
+
+<div id="booking">
+            <div class="container">
+                <div class="section-header">
+
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="">
+                            <div ></div>
+                            <form  id="sendMail" >
+                                <div class="form-row">
+                                    <div class="control-group col-sm-6">
+                                        <label>E-mail</label>
+                                        <input id="mail" name="mail" type="text" class="form-control"   style="border-radius: 10%;border: 2px solid gray" required="required" readonly />
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="control-group col-sm-6">
+                                        <label>主旨</label>
+                                        <input id="subject" name="subject" type="text" class="form-control"   style="border-radius: 10%;border: 2px solid gray" required="required"  />
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label>內容</label>
+                                    <textarea  id="editor" name="remark" class="form-control"  cols="40" rows="20"style="border-radius: 2%;border: 2px solid gray"  ></textarea>
+                                   
+                                </div>
+                              <input class="btn btn-success btn-icon-split" id="send" type="submit" value="寄出">
+							<input class="btn btn-success btn-icon-split" type="reset" value="取消">
+							<input class="btn btn-success btn-icon-split" type="button" value="一鍵輸入" id="fastinput">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!-- 	<form  id="sendMail"> -->
+		
+<!-- 		e-mail<input id="mail" name="mail"type="text" readonly><br> -->
+<!-- 		主旨<input id="subject" name="subject" type="text"><br> -->
+<!-- 		內容<textarea id="editor" name="remark" cols="100" rows="100"></textarea><br> -->
+
+<!-- 		<input class="btn btn-success btn-icon-split" id="send" type="submit" value="寄出"> -->
+<!-- 		<input class="btn btn-success btn-icon-split" type="reset" value="取消"><br> -->
+
+<!-- 	</form> -->
+	
+<!-- 	<form action="/morari/admin/user/work/startCrud.controller" method="GET"> -->
+<!-- 		<input type="submit" value="回上一頁"> -->
+<!-- 	</form> -->
+                </div>
+                <!-- /.container-fluid(結束主要內容區塊) -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div class="footershare"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="loginoutshare"></div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/morari/admin/vendor/jquery/jquery.min.js" ></script>
+    <script src="/morari/admin/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/morari/admin/vendor/jquery-easing/jquery.easing.min.js" defer></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="/morari/admin/js/sb-admin-2.min.js" defer></script>
+
+    <!-- Page level plugins -->
+    <script src="/morari/admin/vendor/chart.js/Chart.min.js" defer></script>
+
+    <!-- Page level custom scripts -->
+    <script src="/morari/admin/js/demo/chart-area-demo.js" defer></script>
+    <script src="/morari/admin/js/demo/chart-pie-demo.js" defer></script>
+    <script src="/morari/work/campJs/mailInsert.js" defer></script>
+<!--     <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js" defer></script> -->
+    <script type="text/javascript">	</script>
+
+
+
+</body>
+
+</html>

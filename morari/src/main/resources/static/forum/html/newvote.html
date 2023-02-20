@@ -1,0 +1,24 @@
+<h3>新增投票</h3>
+<br>
+<form>
+	<div>
+		<label for="">*投票主題</label><br>
+		<input type="text" id="title" maxlength="50" size="80" style="margin:0px 0px 5px 0px;">
+	</div>
+	<div>
+		<label for="">*選項1</label><br>
+		<input type="text" id="option1" maxlength="50" size="80" style="margin:0px 0px 5px 0px;">
+	</div>
+	<div>
+		<label for="">*選項2</label><br>
+		<input type="text" id="option2" maxlength="50" size="80" style="margin:0px 0px 5px 0px;">
+	</div>
+	<div id="newvoteoption"></div>
+	<div>
+		<button id="newoption" style="margin:0px 1px 0px 0px;">新增選項</button>
+		<input type="button" value="送出" id="sendvote">
+		<input type="reset" value="清除">
+		<input type="button" value="回上一頁" onclick="history.back()">
+		<input type="button" value="一鍵輸入" id="fastinput">
+	</div>
+</form>

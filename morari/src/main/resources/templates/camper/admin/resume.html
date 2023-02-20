@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <script src="/morari/admin/js/head.js"></script>
+
+    <!-- sharepage -->
+    <script src="/morari/admin/js/share.js"></script>
+    <link rel="stylesheet" href="/morari/admin/css/dataTable.css">
+</head>
+
+<body id="page-top" style="display: none">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- sidebar -->
+        <div class="sidebarshare"></div>
+        <!-- sidebar end -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- topbar -->
+                <div class="topbarshare"></div>
+                <!-- topbar end -->
+
+                <!-- Begin Page Content(開始主要內容區塊) -->
+                <div class="container-fluid">
+
+                    <!-- 嵌入式網頁 -->
+<!--                     <div class="usertablediv"></div> -->
+<div class="long"><b>═══我的簡歷═══</b></div>
+	<div id="booking">
+            <div class="container">
+                <div class="section-header">
+               
+                    <p>
+                        
+                    </p>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="">
+                            <div ></div>
+                            <form  id="update" >
+                                <div class="form-row">
+                                    <div class="control-group col-sm-6">
+                                        <label>會員編號</label>
+                                        <input id="1" type="text" class="form-control" name="uid"  style="border-radius: 10%;border: 2px solid gray" required="required" readonly />
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div class="control-group col-sm-6">
+                                        <label>姓名</label>
+                                        <input id="2" type="text" class="form-control" name="name" style="border-radius: 10%;border: 2px solid gray"placeholder="" required="required" readonly />
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="control-group col-sm-6">
+                                        <label>年次</label>
+                                        <input id="3" type="text" class="form-control" name="age" style="border-radius: 10%;border: 2px solid gray"placeholder="民國" required="required" readonly/>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div class="control-group col-sm-6">
+                                        <label>Email</label>
+                                        <input id="6" type="text" class="form-control"  name="mail" style="border-radius: 10%;border: 2px solid gray" placeholder="" required="required"  readonly/>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="control-group col-sm-6">
+                                        <label>電話</label>
+                                        <input id="7"type="text" class="form-control" name="phone"style="border-radius: 10%;border: 2px solid gray" placeholder="" required="required" readonly />
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div class="control-group col-sm-6">
+                                    	<label>性別</label><br>
+                                    	<input id="4"type="radio" name="gender" value="男" disabled> 男
+										<input id="5"type="radio" name="gender" value="女" disabled> 女
+										<p class="help-block text-danger"></p>
+                                	</div>
+                                </div>
+                                <div class="control-group">
+                                    <label>學歷</label>
+                                    <textarea id="8"class="form-control" name="educational" cols="20" rows="5" style="border-radius: 10%;border: 2px solid gray"required="required" readonly></textarea>
+                                    <p class="help-block text-danger"></p>
+                                </div>
+                                <div class="control-group">
+                                    <label>專業技能</label>
+                                     <textarea id="9"class="form-control" name="skill"  cols="20" rows="5" style="border-radius: 10%;border: 2px solid gray"required="required" readonly></textarea>
+                                    <p class="help-block text-danger"></p>
+                                </div>
+                            </form>
+                            <form action="/morari/guest/work/update.controller" method="post">
+                      			 <input class="btn btn-success btn-icon-split" type="submit" id="resumeUpdate" value="修改履歷">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<table id="items"></table>
+
+                </div>
+                <!-- /.container-fluid(結束主要內容區塊) -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div class="footershare"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    <!-- user edit -->
+    <dialog class="useredit"></dialog>
+    <!-- Logout Modal-->
+    <div class="loginoutshare"></div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/morari/admin/vendor/jquery/jquery.min.js"></script>
+    <script src="/morari/admin/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/morari/admin/vendor/jquery-easing/jquery.easing.min.js" defer></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="/morari/admin/js/sb-admin-2.min.js" defer></script>
+
+    <!-- Page level plugins -->
+    <script src="/morari/admin/vendor/chart.js/Chart.min.js" defer></script>
+
+    <!-- Page level custom scripts -->
+    <script src="/morari/admin/js/demo/chart-area-demo.js" defer></script>
+    <script src="/morari/admin/js/demo/chart-pie-demo.js" defer></script>
+
+    <!-- datatables js -->
+    <script src="/morari/admin/vendor/datatables/datatables13.js"></script>
+    <script src="/morari/admin/vendor/datatables/datatableresponsive.js"></script>
+    <script src="/morari/admin/vendor/uitls/timeData.js"></script>
+
+    <!-- camper js -->
+    <!-- <script src="/morari/camper/js/alluser.js" ></script> -->
+   <!-- 我自己的東西 -->
+ <script type="text/javascript"></script>
+ <script src="/morari/camper/js/resume.js" defer></script>
+
+</body>
+
+</html>

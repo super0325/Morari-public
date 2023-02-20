@@ -1,0 +1,39 @@
+
+
+.user_edit_button_ture {
+        color: #FFF;
+        border-radius: 10px;
+        border: 0px;
+        /* box-shadow: 0.5px 0.5px 3px #000; */
+        background-color: #69b669;
+        white-space: nowrap;
+        padding: 5px;
+    }
+.user_edit_button_ture:hover {      
+        /* box-shadow: 0.5px 0.5px 5px #000; */
+        background-color: #77ce77;
+    }
+.user_edit_button_ture:active {      
+        /* box-shadow: 0.5px 0.5px 1px #000; */
+        background-color: #69b669;
+    }
+.user_edit_button_false {
+        color: #FFF;
+        border-radius: 10px;
+        border: 0px;
+        /* box-shadow: 0.5px 0.5px 3px #000; */
+        background-color: rgb(206, 119, 119);
+        white-space: nowrap;
+        padding: 5px;
+    }
+.user_edit_button_false:hover {      
+        /* box-shadow: 0.5px 0.5px 5px #000; */
+        background-color: rgb(177, 103, 103);
+    }
+.user_edit_button_false:active {      
+        /* box-shadow: 0.5px 0.5px 1px #000; */
+        background-color: rgb(143, 83, 83);
+    }
+#usereditform input {
+    color: #000;
+}

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <script src="/morari/guest/js/head.js"></script>
+  <!-- sharepage 公用頁面 -->
+  <script src="/morari/guest/js/share.js"></script>
+
+  <style>
+    td {
+      border: 2px black solid;
+    }
+  </style>
+
+</head>
+
+<body style="display: none">
+  <!-- Header Section Start -->
+  <div class="header"></div>
+  <!-- Header Section End -->
+  <div class="wrapper">
+
+    <!-- 分離範例 -->
+
+    <div id="amenities">
+      <div class="container">
+        <div class="section-header">
+          <h2>凹豆商城</h2>
+
+        </div>
+        <div class="room-link">
+          <a href="#" onclick="selectbypdtype('睡袋')" style="margin: 0px 8px;"> 睡袋 </a>
+          <a href="#" onclick="selectbypdtype('燈具')" style="margin: 0px 8px;"> 燈具 </a>
+          <a href="#" onclick="selectbypdtype('桌椅')" style="margin: 0px 8px;"> 桌椅 </a>
+          <a href="#" onclick="selectbypdtype('火爐/炊具')" style="margin: 0px 8px;">火爐/炊具</a>
+          <a href="#" onclick="selectbypdtype('保冷箱')" style="margin: 0px 8px;">保冷箱</a>
+          <a href="#" onclick="selectbypdtype('登山包')" style="margin: 0px 8px;">登山包</a>
+          <a href="#" onclick="selectbypdtype('登山鞋')" style="margin: 0px 8px;">登山鞋</a>
+          <a href="#" onclick="selectbypdtype('其他')" style="margin: 0px 8px;">其他</a>
+        </div><br><br>
+
+        <div class="row" id="banners"></div>
+      </div>
+    </div>
+
+  </div>
+  <!-- Footer Section Start -->
+  <div class="footer"></div>
+  <!-- Footer Section End -->
+
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+
+  <!-- Vendor JavaScript File -->
+  <script src="/morari/guest/vendor/jquery/jquery.min.js"></script>
+  <script src="/morari/guest/vendor/jquery/jquery-migrate.min.js" defer></script>
+  <script src="/morari/guest/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+  <script src="/morari/guest/vendor/easing/easing.min.js" defer></script>
+  <script src="/morari/guest/vendor/stickyjs/sticky.js" defer></script>
+  <script src="/morari/guest/vendor/superfish/hoverIntent.js" defer></script>
+  <script src="/morari/guest/vendor/superfish/superfish.min.js" defer></script>
+  <script src="/morari/guest/vendor/wow/wow.min.js" defer></script>
+  <script src="/morari/guest/vendor/slick/slick.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/moment.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/moment-timezone.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/tempusdominus-bootstrap-4.min.js" defer></script>
+
+  <!-- Booking Javascript File -->
+  <script src="/morari/guest/js/booking.js" defer></script>
+  <script src="/morari/guest/js/jqBootstrapValidation.min.js" defer></script>
+
+  <!-- Main Javascript File -->
+  <script src="/morari/guest/js/main.js" defer></script>
+
+  <script>
+    var uid;
+    fetch("/morari/utils/getuid")
+      .then(response => response.text())
+      .then(datauid => {
+        uid = datauid;
+      })
+
+    fetch('/morari/mall/selectAllPd', { method: 'GET' }).then(
+
+      function (response) {
+        if (response.status != 200) {
+          console.log(response.satus);
+          return;
+        }
+        console.log(response);
+        response.json().then(function (n) {
+          var banners = document.getElementById("banners");
+          for (var i = 0; i < n.length; i++) {
+            //创建一个div
+            var div = document.createElement("div");
+
+
+            //设置div的id
+            div.id = "abc";
+            //设置div的class
+            div.className = "col-md-3 col-sm-6";
+            //设置style
+            //div.style.display="block";
+            div.click = "selectbyid()";
+            //设置子div的其他属性，直接通过字符串连接的方式连接即可。动态值放在引号外面就行
+            div.innerHTML = '<div id="' + n[i].pdid + '" class="item" style="cursor: pointer;">' +
+              '<img  src="' + n[i].pdpicture + '" style="max-height: 130px;" alt="img">' +
+              '<div class="homepage-slider-caption">' +
+              '<h3>' + n[i].pdname + '</h3>' +
+              '<h4>NT$' + n[i].pdprice + '</h4>' +
+              '</div>' +
+              '</div> ';
+
+            banners.appendChild(div);
+            (function (i) {
+              var elementId = n[i].pdid;
+              document.getElementById(elementId).addEventListener("click", function () {
+                // 觸發控制器的代碼
+                $.ajax({
+                  success: function () {
+                    window.location.href = "/morari/mall/productselectbypdid.controller/" + elementId;
+                  }
+                });
+              });
+            })(i);
+
+          }
+        });
+      });
+
+    function selectbypdtype(pdtype) {
+      var pdtype = pdtype;
+      fetch('/morari/mall/selectbypdtype/' + pdtype, { method: 'GET' }).then(
+
+        function (response) {
+          if (response.status != 200) {
+            console.log(response.satus);
+            return;
+          }
+          console.log(response);
+          response.json().then(function (n) {
+            console.log(n);
+            $('#banners').empty();
+            var banners = document.getElementById("banners");
+            for (var i = 0; i < n.length; i++) {
+              //创建一个div
+              var div = document.createElement("div");
+
+
+              //设置div的id
+              div.id = "abc";
+              //设置div的class
+              div.className = "col-md-3 col-sm-6";
+              //设置style
+              //div.style.display="block";
+              div.click = "selectbyid()";
+              //设置子div的其他属性，直接通过字符串连接的方式连接即可。动态值放在引号外面就行
+              div.innerHTML = '<div id="' + n[i].pdid + '" class="item" style="cursor: pointer;">' +
+                '<img  src="' + n[i].pdpicture + '" style="max-height: 130px;" alt="img">' +
+                '<div class="homepage-slider-caption">' +
+                '<h3>' + n[i].pdname + '</h3>' +
+                '<h4>NT$' + n[i].pdprice + '</h4>' +
+                '</div>' +
+                '</div> ';
+
+              banners.appendChild(div);
+              (function (i) {
+                var elementId = n[i].pdid;
+                document.getElementById(elementId).addEventListener("click", function () {
+                  // 觸發控制器的代碼
+                  $.ajax({
+                    success: function () {
+                      window.location.href = "/morari/mall/productselectbypdid.controller/" + elementId;
+                    }
+                  });
+                });
+              })(i);
+
+            }
+          });
+        });
+
+    }
+
+  </script>
+
+
+</body>
+
+</html>

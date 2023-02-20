@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <script src="/morari/admin/js/head.js"></script>
+
+    <!-- sharepage -->
+    <script src="/morari/admin/js/share.js"></script>
+	<link rel="stylesheet" href="/morari/admin/css/dataTable.css">
+</head>
+
+<body id="page-top" style="display: none">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- sidebar -->
+        <div class="sidebarshare"></div>
+        <!-- sidebar end -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- topbar -->
+                <div class="topbarshare"></div>
+                <!-- topbar end -->
+
+                <!-- Begin Page Content(開始主要內容區塊) -->
+                <div class="container-fluid">
+<!-- 這裡 -->
+	<div class="long"><b>═══新增職缺═══</b></div>
+	<div id="booking">
+            <div class="container">
+                <div class="section-header">
+
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="">
+                            <div ></div>
+                            <form  id="insert" >
+                                 <div class="form-row">
+                                    <div class="control-group col-sm-6">
+                                        <label><b>會員編號</b></label>
+                                        <input type="text" class="form-control" name="uid" id="uid" style="border-radius: 10%;border: 2px solid gray" required="required" readonly />
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    
+                                    <div class="control-group col-sm-6">
+                                        <label><b>營區名稱</b></label>
+                                        <input id="1" type="text" name="campname" class="form-control"  style="border-radius: 10%;border: 2px solid gray"placeholder="" required="required" readonly />
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                 	 <div class="control-group col-sm-6">
+                                        <label><b>地址</b></label>
+                                        <input id="2" type="text" name="place" class="form-control"  style="border-radius: 10%;border: 2px solid gray"placeholder="民國" required="required" readonly/>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                   
+                                    <div class="control-group col-sm-6">
+                                        <label><b>類型</b></label>
+                                        <select class="custom-select" name="type" id="type" required="required" style="border-radius: 10%;border: 2px solid gray"  />
+                                        <option disabled selected>請選擇</option>
+                                        <option value="短期工讀">短期工讀</option>
+                                        <option value="長期工作">長期工作</option>
+                                        <option value="打工換宿">打工換宿</option>
+                                        </select>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div class="control-group col-sm-6">
+                                        <label><b>職缺</b></label>
+                                        <select class="custom-select" name="job" id="job" required="required" style="border-radius: 10%;border: 2px solid gray"  />
+                                        <option value="" disabled selected>請選擇</option>
+                                        <option value="廚師">廚師</option>
+                                        <option value="廚助">廚助</option>
+                                        <option value="櫃台">櫃台</option>
+                                        <option value="房務員">房務員</option>
+                                        <option value="清潔員">清潔員</option>
+                                        <option value="夜間值班員">夜間值班員</option>
+                                        </select>
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="control-group col-sm-6">
+                                        <label><b>薪資</b></label>
+                                        <input type="text" class="form-control" id="salary" name="salary" style="border-radius: 10%;border: 2px solid gray"placeholder="" required="required"  />
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div class="control-group col-sm-6">
+                                    	<label><b>人數</b></label><br>
+                                    	 <input type="number" class="form-control" id="quantity" name="quantity" style="border-radius: 10%;border: 2px solid gray"placeholder="" required="required"  />
+										<p class="help-block text-danger"></p>
+                                	</div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="control-group col-sm-6">
+                                        <label><b>上班日期</b></label>
+                                        <input type="text" class="form-control" id="date" name="date" style="border-radius: 10%;border: 2px solid gray"placeholder="" required="required"  />
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                    <div class="control-group col-sm-6">
+                                    	<label><b>上班時段</b></label><br>
+                                    	 <input type="text" class="form-control" id="time" name="time" style="border-radius: 10%;border: 2px solid gray"placeholder="" required="required"  />
+										<p class="help-block text-danger"></p>
+                                	</div>
+                                </div>
+                                <div class="control-group">
+                                    <label><b>備註</b></label>
+                                    <textarea class="form-control" name="remark" id="remark" cols="20" rows="5"style="border-radius: 10%;border: 2px solid gray" required="required" ></textarea>
+                                    <p class="help-block text-danger"></p>
+                                </div>
+                                <input class="btn btn-success btn-icon-split" id="send" type="button" value="送出">
+								<input class="btn btn-success btn-icon-split" type="reset" value="取消">
+								<input class="btn btn-success btn-icon-split" type="button" value="一鍵輸入" id="fastinput">
+<!--                         		照片 -->
+                        		<input id="3" type="hidden" name="img" required><br>
+                            </form>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+	<hr>
+	
+	<h3 id="su"></h3>
+<!-- 	<table id="showInsert" style=" border-collapse: collapse;width: 100%;"></table> -->
+	<table id="showInsert" class="table is-striped"></table>
+	
+                </div>
+                <!-- /.container-fluid(結束主要內容區塊) -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div class="footershare"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="loginoutshare"></div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/morari/admin/vendor/jquery/jquery.min.js" ></script>
+    <script src="/morari/admin/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/morari/admin/vendor/jquery-easing/jquery.easing.min.js" defer></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="/morari/admin/js/sb-admin-2.min.js" defer></script>
+
+    <!-- Page level plugins -->
+    <script src="/morari/admin/vendor/chart.js/Chart.min.js" defer></script>
+
+    <!-- Page level custom scripts -->
+    <script src="/morari/admin/js/demo/chart-area-demo.js" defer></script>
+    <script src="/morari/admin/js/demo/chart-pie-demo.js" defer></script>
+    <!-- datatables js -->
+	<script src="/morari/admin/vendor/datatables/datatables13.js"></script>
+	<script src="/morari/admin/vendor/datatables/datatableresponsive.js"></script>
+    <script src="/morari/work/managerJs/jobInsert.js" defer></script>
+    <script type="text/javascript">
+
+	</script>
+
+</body>
+
+</html>

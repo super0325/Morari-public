@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta charset="UTF-8">
+   <title>formData</title>
+   <script type="text/javascript">
+      window.onload = function () {
+         var form = document.getElementById('form1');
+         var send = document.getElementById('send');
+
+         send.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            var formData = new FormData(form);
+
+            var userName = formData.get("userName");
+            console.log(userName);
+
+            var info = formData.getAll("result1");
+            console.log(info);
+         });
+      }
+   </script>
+</head>
+
+<body>
+   <h3>FormData</h3>
+   <form id="form1">
+      <p>
+         Name:<input type="text" name="userName" placeholder="please input your name" /><br />
+         Information:<br />
+         info1:<input type="text" name="result1" /><br />
+         info2:<input type="text" name="result1" /><br />
+      </p>
+      <button type="submit" id="send" value="Send">Send</button>
+   </form>
+</body>
+
+</html>

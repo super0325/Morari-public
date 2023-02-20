@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <script src="/morari/admin/js/head.js"></script>
+
+    <!-- sharepage -->
+    <script src="/morari/admin/js/share.js"></script>
+
+</head>
+
+<body id="page-top" style="display: none">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- sidebar -->
+        <div class="sidebarshare"></div>
+        <!-- sidebar end -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- topbar -->
+                <div class="topbarshare"></div>
+                <!-- topbar end -->
+
+                <!-- Begin Page Content(開始主要內容區塊) -->
+                <div class="container-fluid">
+
+                    <table id="sitetable" class="card mb-4 py-3 border-left-info"></table>
+
+                    <hr>
+
+                    <div>
+                        <span>
+                            <a href="/morari/admin/camp/insertSitePage.controller"
+                                class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i
+                                        class="fas fa-plus"></i></span><span class="text">營位新增</span></a>
+                        </span>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid(結束主要內容區塊) -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div class="footershare"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="loginoutshare"></div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/morari/admin/vendor/jquery/jquery.min.js"></script>
+    <script src="/morari/admin/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/morari/admin/vendor/jquery-easing/jquery.easing.min.js" defer></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="/morari/admin/js/sb-admin-2.min.js" defer></script>
+
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $(document).ready(function () {
+                var campID = JSON.parse(sessionStorage.getItem("campID"));
+                $.getJSON('/morari/admin/camp/sitesOfCamp.controller/' + campID, function (data) {
+                    var sitetable = $('#sitetable');
+                    var sitetr = '';
+                    sitetable.append('<thead><th>營位編號</th><th>營位名</th><th>圖片</th><th>總營位</th><th>營位金額</th><th>更新</th><th>刪除</th></thead>');
+                    $.each(data, function (i, n) {
+
+                        sitetr = '<tbody class="card mb-4 py-3 border-bottom-dark">'
+                            + '<tr>'
+                            + '<td>' + n.siteID + '</td>'
+                            + '<td>' + n.siteName + '</td>'
+                            + '<td>' + '<img src="' + n.sitePicturesPath + '">' + '</td>'
+                            + '<td>' + n.totalSites + '</td>'
+                            + '<td>' + n.siteMoney + '</td>'
+                            + '<td>'
+                            + '<button class=\"datatable_edit_button\" id="update" type="button" name="siteID" value="' + n.siteID + '"><i class=\"fas fa-sliders-h\"></i></button>'
+                            + '</td>'
+                            + '<td>'
+                            + '<button class=\"datatable_del_button\" id="delete" type="button" name="siteID" value="' + n.siteID + '"><i class=\"fas fa-trash-alt\"></i></button>'
+                            + '</td>'
+                            + '</tr>'
+                            + '</tbody>'
+                        sitetable.append(sitetr);
+
+                        $('th',).width('100px').css("text-align", "center");
+                        $('td').width('100px').css("text-align", "center");
+                        $('img').width('90px').height('90px');
+                    });
+                })
+
+                $('#sitetable').on('click', '#update', function () {
+                    if (confirm("確定更新?")) {
+                        alert("更新!!");
+                        var siteID = $(this).parent().prev().prev().prev().prev().prev().text();
+                        sessionStorage.setItem("siteID", JSON.stringify(siteID));
+                        window.location.href = '/morari/admin/camp/UpdateSiteByIDForm';
+                    }
+                    else {
+                        alert("取消更新!");
+                        return false;
+                    }
+                });
+
+                $('#sitetable').on('click', '#delete', function () {
+                    if (confirm("確定刪除?")) {
+                        alert("刪除!!");
+                        var siteID = $(this).parent().prev().prev().prev().prev().prev().prev().text();
+                        var cj = JSON.stringify(siteID);
+                        var deletebody = $(this).parent().parent().parent();
+                        $.ajax({
+                            url: '/morari/admin/camp/deleteSiteByID.controller',
+                            type: 'post',
+                            data: cj,
+                            contentType: 'application/json',
+                            success: function (deleteResult) {
+                                alert('營區位:' + campID + ' 成功刪除');
+                                deletebody.empty();
+                            }
+                        });
+                    }
+                    else {
+                        alert("取消刪除!");
+                        return false;
+                    }
+                });
+
+            });
+        });
+    </script>
+
+</body>
+
+</html>

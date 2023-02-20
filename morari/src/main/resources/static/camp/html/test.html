@@ -1,0 +1,44 @@
+ <h3>新增營地資料:</h3>
+                <form method="post" action="insertCamp.controller" enctype="multipart/form-data">
+                    <div>
+                        <input type="text" name="campName" value="${param.campName}" placeholder="營地名" />
+                        <div style="color:#FF0000; font-size:60%; display: inline">
+                            ${errors.campName}</div>
+                    </div>
+                    <div>
+                        <input name="campPicturesPath" type="file">
+                        <div style="color:#FF0000; font-size:60%; display: inline">
+                            ${errors.campPicturesPath}</div>
+                    </div>
+                    <!-- Break -->
+                    <c:forEach var='city' items='${cityList}'>
+                        <div>
+                            ${city.cityName}<input type="radio" name="cityID" value="${city.cityID}">
+                        </div>
+                    </c:forEach>
+                    <div style="color:#FF0000; font-size:60%; display: inline">
+                        ${errors.cityID}</div>
+                    <!-- Break -->
+                    <div>
+                        <input type="text" name="location" value="${param.location}" placeholder="地址" />
+                        <div style="color:#FF0000; font-size:60%; display: inline">
+                            ${errors.location}</div>
+                    </div>
+                    <!-- Break -->
+                    <div>
+                        <c:forEach var='tag' items='${tagList}'>
+                            ${tag.tagName}<input type="checkbox" name="tagID" value="${tag.tagID}">
+                        </c:forEach>
+                    </div>
+                    <div style="color:#FF0000; font-size:60%; display: inline">
+                        ${errors.tagIDs}</div>
+                    <!-- Break -->
+                    <div>
+                        <textarea name="description" placeholder="描述" rows="6"></textarea>
+                    </div>
+                    <!-- Break -->
+                    <div>
+                        <input type="submit" value="Add" />
+                        <input type="reset" value="Reset" />
+                    </div>
+                </form>

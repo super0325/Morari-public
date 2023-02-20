@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+    <style>
+    .fc-day-header {
+        font-weight: bold;
+        background-color: Azure;
+        font-size: 18px;
+        color: DarkSlateGray;
+    }
+    .fc-center {
+        font-size: 24px;
+        font-weight: bold;
+    }
+    .fc-today {
+        background-color: Yellow;
+    }
+    .fc-day-number {
+        font-size: 18px;
+        font-weight: bold;
+        color: DarkSlateGray;
+    }
+</style>
+</head>
+
+<body>
+    <div id="calendar"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $(document).ready(function () {
+                var campID = JSON.parse(sessionStorage.getItem("campID"));
+                $.getJSON('/morari/camp/returnFulledDay/' + campID, function (data) {
+                    var events = [];
+                    $.each(data, function (i, n) {
+                        events.push({
+                            title: '滿',
+                            start: moment().add(n, 'days').format('YYYY-MM-DD'),
+                            backgroundColor: 'red',
+                            textColor: 'yellow',
+                        });
+                    });
+
+                    $('#calendar').fullCalendar({
+                        editable: true,
+                        events: events,
+                        height: 480, // 設定 Calendar 的高度
+                        header: {
+                            left: '',
+                            center: 'title',
+                        },
+                        viewRender: function (view, element) {
+                            var title = view.title;
+                            $('.fc-center').css('color', 'Brown');
+                            $('.fc-center').css('font-size', '100');
+                        },
+                        dayRender: function (date, cell) {
+                            if (moment().format('YYYY-MM-DD') == date.format('YYYY-MM-DD')) {
+                                cell.css("background-color", "Yellow");
+                            } else if (date.day() === 0 || date.day() === 6) {
+                                cell.css("background-color", "LavenderBlush");
+                            } else {
+                                cell.css("background-color", "MintCream");
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

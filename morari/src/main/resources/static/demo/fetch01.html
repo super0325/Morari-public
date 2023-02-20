@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>fetch01</title>
+	<script type="text/javascript">
+		fetch('json/profiles2.json').then(function (response) {
+			if (response.status != 200) {
+				console.log(response.status);
+				return;
+			}
+
+			response.json().then(function (data) {
+				var resultText = '';
+				for (var i = 0; i < data.length; i++) {
+					resultText += data[i].name + " " + data[i].address + " " + data[i].age + "<br/>";
+				}
+				document.getElementById('result').innerHTML = resultText;
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<div id="result"></div>
+</body>
+
+</html>

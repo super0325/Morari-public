@@ -1,0 +1,63 @@
+<div class="container">
+	<h3>Update Post</h3>
+	<br>
+	
+	<form>
+		<div>
+			<label>*標題</label>
+			<input type="text" class="form-control" name="title" id="title" maxlength="30">
+			<br>
+		</div>
+		<div>
+			<label>*內容</label>
+			<textarea name="content" class="form-control" id="postcontent" rows="10"></textarea>
+			<br>
+		</div>
+		<div>
+			<label>照片:</label>
+			<input type="file" name="newpicture" id="newpicture">
+			<img alt="" id="picture" width="100%">
+			<br><br>
+		</div>
+		<div class="form-row">
+			<div class="control-group col-sm-6">
+				<label>開始露營日期</label>
+				<input type="date" class="form-control" name="startDate" id="startDate">
+				<br>
+			</div>
+			<div class="control-group col-sm-6">
+				<label>結束露營日期</label>
+				<input type="date" class="form-control" name="endDate" id="endDate">
+				<br>
+			</div>
+		</div>	
+		<div class="form-row">
+			<div class="control-group col-sm-6">
+				<label>露營人數</label>
+				<select class="custom-select" name="people" id="people"></select>
+				<br>
+			</div>
+			<div class="control-group col-sm-6">
+				<label>露營費用</label>
+				<input type="number" class="form-control" name="price" id="price" min="1">
+				<br>
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="control-group col-sm-6">
+				<label>露營城市</label>
+				<select class="custom-select" name="county" id="county"></select>
+				<br>
+			</div>
+			<div class="control-group col-sm-6">
+				<label>評分</label>
+				<select class="custom-select" name="score" id="score"></select>
+			</div>
+		</div>	
+		<div>
+			<br>
+			<input type="button" value="修改完成" id="sub">
+			<input type="button" value="回上一頁" onclick="history.back()">
+		</div><br>
+	</form>
+</div>

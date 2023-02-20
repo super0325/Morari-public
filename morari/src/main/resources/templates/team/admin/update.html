@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>修改</title>
+<script>
+		window.onload = function () {
+			const form = document.getElementById('update');
+
+			form.addEventListener('submit', function (event) {
+				event.preventDefault();
+
+				const formData = new FormData(form);
+				
+				const today = new Date();
+				today.setDate(today.getDate() - 1);
+				const startDate = new Date(formData.get('startdate'));
+				const endDate = new Date(formData.get('enddate'));
+				
+				if (startDate > endDate) {
+				    alert("開始日期不可小於結束日起，這不是時間旅行！！！");
+				    return;
+				  } else if (startDate < today || endDate < today) {
+				    alert("抱歉我們無法讓你回到過去，請重新選擇時間");
+				    return;
+				  }
+				
+				//取得radio按鈕
+				const pair = formData.get('pair');
+				formData.delete("userprofiles");
+				
+				// 如果 radio 按鈕未選中，則將其值設置為 undefined
+				if (!pair) {
+					formData.set('pair', undefined);
+				}
+				const data = Object.fromEntries(formData);
+				const json = JSON.stringify(data);
+				
+				var result = confirm("確定要修改本筆資料嗎");
+				
+				if(result){
+					
+				fetch('/morari/team/updateMaterial.controller', {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: json
+				})
+					.then(function (response) {
+						console.log(response);
+						if (response.status == 200) {
+							location.href = '/morari/team/teammanager.controller';
+						}
+					});
+					
+				}
+				
+			});
+		}
+
+	</script>
+</head>
+
+<body>
+	<h3>修改</h3>
+	<form id="update">
+		<input type="hidden" id="initiatingnum" name="initiatingnum"><br>
+		<input type="hidden" id="userprofiles" name="userprofiles">
+		起始日期:<input type="date" id="startdate" name="startdate" required><br>
+		結束日期:<input type="date" id="enddate" name="enddate" required><br>
+		現有人數:<input type="text" id="currentnum" name="currentnum"
+			onkeyup="value=value.replace(/[^\d]/g,'') " required
+			placeholder="請輸入現有人數,僅限數字"><br> 接受人數:<input type="text"
+			id="acceptablenum" name="acceptablenum"
+			onkeyup="value=value.replace(/[^\d]/g,'') " required
+			placeholder="請輸入接受人數,僅限數字"><br> 露營地點:<input type="text"
+			id="camparea" name="camparea" required placeholder="請輸入露營地點"><br>
+		配對狀態:<input type="radio" id="pair1" name="pair" value="0" checked>可配對
+		<input type="radio" id="pair2" name="pair" value="1">不可配對<br>
+		<button type="submit" id="send" value="Send">Send</button>
+	</form>
+	<script type="text/javascript">
+		const urlParams = new URLSearchParams(window.location.search);
+		const value1 = urlParams.get('dnum');
+		const value2 = urlParams.get('pman');
+		console.log(value1);
+		console.log(value2);
+		const inputElement1 = document.getElementById('initiatingnum');
+		inputElement1.value = value1;
+		const inputElement2 = document.getElementById('userprofiles');
+		inputElement2.value = value2;
+		
+		fetch('/morari/team/findById.controller/{'+ value1 + '}', {
+			  method: 'POST',
+			  headers: {
+			    'Content-Type': 'application/json'
+			  }
+			})
+			  .then(function(response) {
+			    if(response.status == 200){
+			    	response.json().then(function(data){
+			    		var sDay = new Date(data.startdate).toLocaleDateString("zh-TW", {year: 'numeric', month: '2-digit', day: '2-digit'});
+						var eDay = new Date(data.enddate).toLocaleDateString("zh-TW", {year: 'numeric', month: '2-digit', day: '2-digit'});
+						var std =  sDay.replace(/\//g, "-");
+						var ed = eDay.replace(/\//g, "-");
+			    		document.getElementById("startdate").value = std;
+			    		document.getElementById("enddate").value = ed;
+			    		document.getElementById("currentnum").value = data.currentnum;
+			    		document.getElementById("acceptablenum").value = data.acceptablenum;
+			    		document.getElementById("camparea").value = data.camparea;
+			    		
+			    		if(data.pair === 0){
+			    		document.getElementById("pair1").checked = true;
+			    		}else{
+			    		document.getElementById("pair2").checked = true;
+			    		}
+			    	});
+			    }
+			  });
+		
+	</script>
+</body>
+
+</html>

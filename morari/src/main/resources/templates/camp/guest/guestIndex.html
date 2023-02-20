@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <script src="/morari/guest/js/head.js"></script>
+  <!-- sharepage 公用頁面 -->
+  <script src="/morari/guest/js/share.js"></script>
+</head>
+
+<body style="display: none">
+  <!-- Header Section Start -->
+  <div class="header"></div>
+  <!-- Header Section End -->
+  <div class="wrapper">
+
+
+
+    <!-- Amenities Section Start -->
+    <div id="amenities">
+      <div class="container">
+        <div class="section-header">
+          <h2 style="color: brown;">═══ 精選營地 ═══</h2>
+          <p>
+            「Morari」是一個網路平台，致力於統合全台的露營地資訊，提供使用者方便快速的露營地查詢、預約和結帳服務。我們致力於打造一個簡化且優質的使用者體驗，讓露營不再是困難的選擇。體驗一次輕鬆愉快的露營生活，就在「Morari」。
+          </p>
+        </div>
+        
+
+        <form id="cityform" method="post" >
+          <table id="citytable"></table>
+        </form>
+
+
+        <hr>
+
+        <div class="row" id="camprow"></div>
+
+        <table id="changeP"></table>
+
+      </div>
+    </div>
+    <!-- Amenities Section Start -->
+
+
+    <!-- 分離範例 -->
+    <!-- <div class="test"></div>
+  <script src="/morari/camper/js/test.js"></script> -->
+
+
+
+
+
+
+  </div>
+  <!-- Footer Section Start -->
+  <div class="footer"></div>
+  <!-- Footer Section End -->
+
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+
+  <!-- Vendor JavaScript File -->
+  <script src="/morari/guest/vendor/jquery/jquery.min.js"></script>
+  <script src="/morari/guest/vendor/jquery/jquery-migrate.min.js" defer></script>
+  <script src="/morari/guest/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+  <script src="/morari/guest/vendor/easing/easing.min.js" defer></script>
+  <script src="/morari/guest/vendor/stickyjs/sticky.js" defer></script>
+  <script src="/morari/guest/vendor/superfish/hoverIntent.js" defer></script>
+  <script src="/morari/guest/vendor/superfish/superfish.min.js" defer></script>
+  <script src="/morari/guest/vendor/wow/wow.min.js" defer></script>
+  <script src="/morari/guest/vendor/slick/slick.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/moment.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/moment-timezone.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/tempusdominus-bootstrap-4.min.js" defer></script>
+
+  <!-- Booking Javascript File -->
+  <script src="/morari/guest/js/booking.js" defer></script>
+  <script src="/morari/guest/js/jqBootstrapValidation.min.js" defer></script>
+
+  <!-- Main Javascript File -->
+  <script src="/morari/guest/js/main.js" defer></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $(document).ready(function () {
+        load(1);
+      });
+    });
+
+    function load(indexPage) {
+      $.getJSON('/morari/camp/guestAllCamp/' + indexPage, function (data) {
+
+        $('#citytable').empty();
+        $('#camprow').empty();
+        $('#changeP').empty();
+
+        var cityList = data["cityList"];
+        var citytable = $('#citytable');
+        var citys = '';
+        var citytr = '';
+        $.each(cityList, function (i, n) {
+          citys += '<input type="checkbox" name="cityID" value="' + n.cityID + '" />' + n.cityName
+        });
+        citytr += '<tbody><tr><td><h3>縣市查詢營地資料:</h3></td><td></td><td>' + citys + '</td><td><input type="submit" value="查詢"><span id="errorcityIDs" style="color: red;"></span></td></tr></tbody>'
+        citytable.append(citytr);
+
+        $('#cityform').on('submit', function (e) {
+          e.preventDefault();
+          var checkboxValues = [];
+          $('input[name="cityID"]:checked').each(function () {
+            checkboxValues.push($(this).val());
+          });
+          var jsonData = JSON.stringify(checkboxValues);
+          $.ajax({
+            url: '/morari/admin/camp/queryCampsByCityIDs.controller',
+            type: 'post',
+            data: jsonData,
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (QueryByCityIDsResult) {
+              $("#errorcityIDs").empty();
+
+              if (QueryByCityIDsResult.error == 'true') {
+                $("#errorcityIDs").append(QueryByCityIDsResult.cityIDs);
+                return;
+              }
+              else if (QueryByCityIDsResult.error == 'none') {
+                $("#camprow").empty();
+                $('#changeP').hide();
+                $("#errorcityIDs").append(QueryByCityIDsResult.noData);
+                return;
+              }
+              else {
+                $("#camprow").empty();
+                var camprow = $('#camprow');
+                $('#changeP').show();
+                var p = '';
+
+                $.each(QueryByCityIDsResult, function (i, n) {
+                  var tagNames = '';
+                  n.tags.forEach(element => {
+                    tagNames += element.tagName + ' /<br>'
+                  });
+
+                  p = '<div class="col-md-3 col-sm-6">'
+                    + '<div class="item">'
+                    + '<input type="hidden" value="' + n.campID + '">'
+                    + '<h1 >' + n.campName + '</h1>'
+                    + '<p class="p2">' + '<a href="#"><img width="90%" height="90%" src="' + n.campPicturesPath + '"></a></p>'
+                    + '<p>' + n.city.cityName + '</p>'
+                    + '<p>' + n.description + '</p>'
+                    + '<p>' + n.location + '</p>'
+                    + '<p>' + tagNames + '</p>'
+                    + '</div>'
+                    + '</div>'
+
+                  camprow.append(p);
+                });
+              }
+            }
+          });
+        });
+
+        var allCamps = data["campList"];
+        var camprow = $('#camprow');
+        var p = '';
+
+        $.each(allCamps, function (i, n) {
+          var tagNames = '';
+          n.tags.forEach(element => {
+            tagNames += element.tagName + ' /<br>'
+          });
+
+          p = '<div class="col-md-3 col-sm-6">'
+            + '<div class="item">'
+            + '<input type="hidden" value="' + n.campID + '">'
+            + '<h1 >' + n.campName + '</h1>'
+            + '<p class="p2">' + '<a href="#"><img width="90%" height="90%" src="' + n.campPicturesPath + '"></a></p>'
+            + '<p>' + n.city.cityName + '</p>'
+            + '<p>' + n.description + '</p>'
+            + '<p>' + n.location + '</p>'
+            + '<p>' + tagNames + '</p>'
+            + '</div>'
+            + '</div>'
+
+          camprow.append(p);
+        });
+
+        var totalPages = data["totalPages"];
+        var totalOrders = data["totalOrders"];
+
+        var buttons = '';
+        for (var i = 1; i <= totalPages; i++) {
+          buttons += '<button type="button" onclick="load(' + i + ')" value="' + i + '">' + i + '</button>'
+        }
+
+        var changeP = $('#changeP');
+        var changetr = '';
+        changetr = '<tr id="tr2">'
+          + '<td>' + 'Total Pages:' + '<br>' + totalPages + '</td>'
+          + '<td>' + 'Total Camps:' + '<br>' + totalOrders + '</td>'
+          + '<td>' + 'Page:' + '<br>' + buttons + '</td>'
+          + '</tr>'
+        changeP.append(changetr);
+
+      });
+
+      $('#camprow').on('click', '.p2', function () {
+        var campID = $(this).prev().prev().val();
+        sessionStorage.setItem("campID", JSON.stringify(campID));
+        window.location.href = '/morari/camp/insertorders';
+      });
+
+    };
+
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+	<script src="/morari/guest/js/head.js"></script>
+	<!-- sharepage 公用頁面 -->
+	<script src="/morari/guest/js/share.js"></script>
+
+
+</head>
+
+<body style="display: none">
+	<!-- Header Section Start -->
+	<div class="header"></div>
+
+	<!-- Header Section End -->
+
+
+
+
+
+
+
+
+	<!-- 分離範例 -->
+	<script src="team/js/test.js"></script>
+
+	<div id="rooms">
+		<div class="container">
+			<div class="section-header">
+				<h2>朋友們~~一起來~~</h2>
+				<h2>下海上山~~露營揪團~~</h2>
+				<p>
+					隨著時代的變遷，放眼望去總是一座又一座的高樓大廈，有多久沒有親近大自然了呢？
+					日復一日的工作，是否讓你忘記了許多初衷，放下手邊的工作，背上背包來場露營<br>
+					一個人出遊或許膽怯，但在這裡，你可以號召有相同興趣的夥伴！！！ 還在等什麼呢？選好你想去的地點，發起揪團，或是加入他人吧！！！
+				</p>
+			</div>
+			
+			<div class="col-md-12 room">
+			<div class="row">
+			<div class="room-does">
+			<div class="room-link">
+			<a href="#" data-toggle="modal" data-target="#modal-id" onclick="insert();">發起揪團</a>
+			</div>
+			</div>
+			</div>
+			</div>
+
+			<div id="result" class="row"></div>
+
+			<div id="apply" class="room-link"></div>
+			
+			<div id="applyresponse" class="room-link"></div>
+			
+			<div id="showapplyresponse" class="room-link"></div>
+
+		</div>
+	</div>
+	<div id="page"></div>
+
+	<!-- Footer Section Start -->
+	<div class="footer"></div>
+	<!-- Footer Section End -->
+
+	<a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+
+	<!-- Vendor JavaScript File -->
+	<script src="/morari/guest/vendor/jquery/jquery.min.js"></script>
+	<script src="/morari/guest/vendor/jquery/jquery-migrate.min.js" defer></script>
+	<script src="/morari/guest/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+	<script src="/morari/guest/vendor/easing/easing.min.js" defer></script>
+	<script src="/morari/guest/vendor/stickyjs/sticky.js" defer></script>
+	<script src="/morari/guest/vendor/superfish/hoverIntent.js" defer></script>
+	<script src="/morari/guest/vendor/superfish/superfish.min.js" defer></script>
+	<script src="/morari/guest/vendor/wow/wow.min.js" defer></script>
+	<script src="/morari/guest/vendor/slick/slick.min.js" defer></script>
+	<script src="/morari/guest/vendor/tempusdominus/js/moment.min.js" defer></script>
+	<script src="/morari/guest/vendor/tempusdominus/js/moment-timezone.min.js" defer></script>
+	<script src="/morari/guest/vendor/tempusdominus/js/tempusdominus-bootstrap-4.min.js" defer></script>
+
+	<!-- Booking Javascript File -->
+	<script src="/morari/guest/js/booking.js" defer></script>
+	<script src="/morari/guest/js/jqBootstrapValidation.min.js" defer></script>
+
+	<!-- Main Javascript File -->
+	<script src="/morari/guest/js/main.js" defer></script>
+
+	<script type="text/javascript">
+
+		var user;
+
+		var datalength = 0;
+
+		var page = 1;
+
+		$(function () {
+			$(document).ready(function () {
+
+				fetch("/morari/utils/getuid")
+					.then(response => response.text())
+					.then(data => {
+						console.log(data)
+
+						user = data
+
+						fetch('/morari/team/view.controller', { method: 'GET' }).then(
+							function (response) {
+								if (response.status != 200) {
+									console.log(response.satus);
+									return;
+								}
+								console.log(user);
+
+								console.log(response);
+
+								response.json().then(function (data) {
+
+									var tableData = "";
+
+									var pagebtn = "";
+
+									var five = 5;
+
+									datalength = data.length;
+
+									if (datalength < 5) {
+										five = datalength
+									}
+
+
+									pages = Math.ceil(datalength / 5);
+
+									console.log(pages + "頁");
+
+									for (var x = 0; x < pages; x++) {
+										pagebtn += '<button type="button" onclick="load(' + (x + 1) + ')" value="' + (x + 1) + '">' + (x + 1) + '</button>';
+									}
+
+
+									for (var i = 0; i < five; i++) {
+
+										var pDay = new Date(data[i].postdate).toLocaleDateString("zh-TW", { year: 'numeric', month: '2-digit', day: '2-digit' });
+										var sDay = new Date(data[i].startdate).toLocaleDateString("zh-TW", { year: 'numeric', month: '2-digit', day: '2-digit' });;
+										var eDay = new Date(data[i].enddate).toLocaleDateString("zh-TW", { year: 'numeric', month: '2-digit', day: '2-digit' });;
+
+										var pair = "可配對";
+										if (data[i].pair != 0) {
+											pair = "不可配對"
+										}
+
+										tableData += '<div class="col-md-12 room">' +
+											'<div class="row">' +
+											'<div  class="col-md-6">' +
+											'<div class="room-img">' +
+											'<img src="' + data[i].picture + '" width="100%" height="50%">' +
+											"</div>" +
+											"</div>" +
+											'<div class="col-md-6">' +
+											'<div class="room-des">' +
+											'<h3>' + data[i].title + '</h3>' +
+											'<h1>' + data[i].acceptablenum + '<span>(可接受人數)/ ' + data[i].currentnum + '(現有人數)</span></h1>' +
+											'<ul class="room-size">' +
+											'<li><i class="fa fa-arrow-right"></i>開始日期：' + sDay + '</li>' +
+											'<li><i class="fa fa-arrow-right"></i>結束日期：' + eDay + '</li>' +
+											'</ul>' +
+											'<span>' + data[i].introduction + '</span>' +
+											'<div class="room-link">' +
+											'<a href="#" data-toggle="modal" data-target="#modal-id">瀏覽數： ' + data[i].viewingCount + '</a>' +
+											'<a href="#" data-toggle="modal" data-target="#modal-id">按讚數： ' + data[i].thumbsUp + '</a><br><br>' +
+											'<a name="ThumbsUp" id="' + data[i].initiatingnum + '"' + 'href="#" data-toggle="modal" data-target="#modal-id" onclick="changeColor(this);">讚</a>' +
+											'<a href="#" data-toggle="modal" data-target="#modal-id" onclick=' + '"moreInformation(' + data[i].initiatingnum + ');">更多資訊</a>' +
+											'</div>' +
+											'</div>' +
+											'</div>' +
+											'</div>' +
+											'</div>'
+									}
+									document.getElementById('result').innerHTML = tableData;
+									document.getElementById('page').innerHTML = pagebtn;
+
+								});
+
+
+
+								fetch('/morari/team/selectThumbsUp.controller/' + user, { method: 'GET' }).then(
+									function (response) {
+										if (response.status != 200) {
+											console.log(response.satus);
+											return;
+										}
+
+										console.log(response);
+
+										response.json().then(function (data) {
+
+											console.log("我來囉")
+
+											var thup = document.getElementsByName("ThumbsUp");
+											for (let i = 0; i < thup.length; i++) {
+
+												for (let j = 0; j < data.length; j++) {
+													if (Number(thup[i].id) == data[j].initiating.initiatingnum) {
+														thup[i].style.backgroundColor = "yellow";
+													}
+												}
+
+											}
+										});
+
+									});
+
+							});
+
+
+						fetch('/morari/team/findApply.controller/' + user, { method: 'GET' }).then(
+							function (response) {
+								if (response.status != 200) {
+									console.log(response.satus);
+									return;
+								}
+
+								console.log(response);
+
+								response.json().then(function (data) {
+
+									console.log("有囉")
+									
+									var applyData = "";
+									
+									if(data.length > 0){
+										
+										applyData += '<a href="#" data-toggle="modal" data-target="#modal-id" onclick=' + '"apply();">您有' + data.length + '筆揪團申請未回覆</a>'
+										
+									}
+									
+									document.getElementById('apply').innerHTML = applyData;
+									
+								});
+
+							});
+							
+						//查看申請清單的回覆
+						
+						fetch('/morari/team/findApplyResponse.controller/' + user, { method: 'GET' }).then(
+								function (response) {
+									if (response.status != 200) {
+										console.log(response.satus);
+										return;
+									}
+
+									console.log(response);
+
+									response.json().then(function (data) {
+
+										console.log("有回覆囉")
+										
+										var applyresponseData = "";
+										
+										var showapplyresponse ="";
+										
+										if(data.length > 0){
+											
+											applyresponseData += '<a href="#" data-toggle="modal" data-target="#modal-id" onclick=' + '"applyresponse();">您有' + data.length + '筆揪團申請的回覆</a>'
+											
+											for(var i = 0; i < data.length; i++){
+												if(data[i].pairstate == 0){
+													showapplyresponse += '<p>揪團 ' + data[i].initiating.initiatingnum + ' 號的發起人：' + data[i].userprofiles.userdetail.nickname + ' 拒絕了你的申請</p>'
+												}else if(data[i].pairstate == 1){
+													showapplyresponse += '<p>揪團 ' + data[i].initiating.initiatingnum + ' 號的發起人：' + data[i].userprofiles.userdetail.nickname + ' 接受了你的申請</p>'
+												}
+											}
+											
+											document.getElementById('showapplyresponse').innerHTML = showapplyresponse;
+											document.getElementById('showapplyresponse').style.display = "none";
+											
+										}
+										
+										document.getElementById('apply').innerHTML = applyresponseData;
+										
+									});
+
+								});
+
+					});
+
+			});
+
+		})
+
+
+		function load(indexPage) {
+
+			var elements = document.getElementsByTagName("a");
+			let arr = [];
+			const zero = 0;
+			for (var i = 0; i < elements.length; i++) {
+				if (elements[i].style.backgroundColor === "yellow") {
+					console.log(elements[i].id);
+					arr.push(elements[i].id);
+				} else if (elements[i].style.backgroundColor !== "yellow" && elements[i].id > 0) {
+					console.log(elements[i].id);
+					arr.push(zero - elements[i].id);
+				}
+			}
+			console.log(arr);
+
+			const array = JSON.stringify(arr);
+
+			fetch('/morari/team/thumbsUp.controller/' + user, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: array
+			}).then(function (response) {
+				console.log(response.status);
+				if (response.status == 200) {
+					console.log("按讚ok唷")
+				}
+
+			});
+
+			fetch('/morari/team/viewPaging.controller/{' + indexPage + '}', { method: 'GET' }).then(
+				function (response) {
+					if (response.status != 200) {
+						console.log(response.satus);
+						return;
+					}
+
+					console.log(response);
+
+					response.json().then(function (data) {
+
+						var tableData = "";
+
+						var pagebtn = "";
+
+						datalength = data.length;
+
+						pages = Math.ceil(datalength / 5);
+
+						for (var i = 0; i < datalength; i++) {
+
+							var pDay = new Date(data[i].postdate).toLocaleDateString("zh-TW", { year: 'numeric', month: '2-digit', day: '2-digit' });
+							var sDay = new Date(data[i].startdate).toLocaleDateString("zh-TW", { year: 'numeric', month: '2-digit', day: '2-digit' });;
+							var eDay = new Date(data[i].enddate).toLocaleDateString("zh-TW", { year: 'numeric', month: '2-digit', day: '2-digit' });;
+
+							var pair = "可配對";
+							if (data[i].pair != 0) {
+								pair = "不可配對"
+							}
+
+							tableData += '<div class="col-md-12 room">' +
+								'<div class="row">' +
+								'<div  class="col-md-6">' +
+								'<div class="room-img">' +
+								'<img src="' + data[i].picture + '" width="100%" height="50%">' +
+								"</div>" +
+								"</div>" +
+								'<div class="col-md-6">' +
+								'<div class="room-des">' +
+								'<h3>' + data[i].title + '</h3>' +
+								'<h1>' + data[i].acceptablenum + '<span>(可接受人數)/ ' + data[i].currentnum + '(現有人數)</span></h1>' +
+								'<ul class="room-size">' +
+								'<li><i class="fa fa-arrow-right"></i>開始日期：' + sDay + '</li>' +
+								'<li><i class="fa fa-arrow-right"></i>結束日期：' + eDay + '</li>' +
+								'</ul>' +
+								'<span>' + data[i].introduction + '</span>' +
+								'<div class="room-link">' +
+								'<a href="#" data-toggle="modal" data-target="#modal-id">瀏覽數： ' + data[i].viewingCount + '</a>' +
+								'<a href="#" data-toggle="modal" data-target="#modal-id">按讚數' + data[i].thumbsUp + '</a><br><br>' +
+								'<a name="ThumbsUp" id="' + data[i].initiatingnum + '"' + 'href="#" data-toggle="modal" data-target="#modal-id" onclick="changeColor(this);">讚</a>' +
+								'<a href="#" data-toggle="modal" data-target="#modal-id" onclick=' + '"moreInformation(' + data[i].initiatingnum + ');">更多資訊</a>' +
+								'</div>' +
+								'</div>' +
+								'</div>' +
+								'</div>' +
+								'</div>'
+						}
+						document.getElementById('result').innerHTML = tableData;
+					});
+					//------------------------------------------------------------------------------------------------------------------------------------------------
+
+					fetch('/morari/team/selectThumbsUp.controller/' + user, { method: 'GET' }).then(
+						function (response) {
+							if (response.status != 200) {
+								console.log(response.satus);
+								return;
+							}
+
+							console.log(response);
+
+							response.json().then(function (data) {
+
+								console.log("我來囉")
+
+								var thup = document.getElementsByName("ThumbsUp");
+								for (let i = 0; i < thup.length; i++) {
+
+									for (let j = 0; j < data.length; j++) {
+
+										if (Number(thup[i].id) == data[j].initiating.initiatingnum) {
+											thup[i].style.backgroundColor = "yellow";
+										}
+									}
+
+								}
+							});
+						});
+					//------------------------------------------------------------------------------------------------------------------------------------------------
+
+				});
+			//------------------------------------------------------------------------------------------------------------------------------------------------
+
+			//------------------------------------------------------------------------------------------------------------------------------------------------
+
+		}
+
+		function changeColor(element) {
+			if (element.style.backgroundColor === "yellow") {
+				element.style.backgroundColor = "#CBAC88";
+			} else {
+				element.style.backgroundColor = "yellow";
+			}
+		}
+
+		function moreInformation(initiatingnum) {
+			
+			console.log("更多資訊")
+			
+			window.location.href = "/morari/team/moreInformation.controller/" + initiatingnum;
+		}
+		
+		function apply(){
+			window.location.href = "/morari/team/apply.controller";
+		}
+		
+		function applyresponse(){
+			document.getElementById('showapplyresponse').style.display = "block";
+			
+			fetch('/morari/team/overViewApplyResponse.controller/' +  user, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: null
+			})
+				.then(function (response) {
+					if (response.status == 200) {
+						console.log("查看完畢")
+					}
+			});
+		}
+		
+		function insert(){
+			window.location.href = "/morari/team/guestinsert.controller"
+		}
+
+		window.addEventListener("unload", async function (event) {
+
+			var elements = document.getElementsByTagName("a");
+			let arr = [];
+			const zero = 0;
+			for (var i = 0; i < elements.length; i++) {
+				if (elements[i].style.backgroundColor === "yellow") {
+					console.log(elements[i].id);
+					arr.push(elements[i].id);
+				} else if (elements[i].style.backgroundColor !== "yellow" && elements[i].id > 0) {
+					console.log(elements[i].id);
+					arr.push(zero - elements[i].id);
+				}
+			}
+			console.log(arr);
+
+			const array = JSON.stringify(arr);
+
+			await fetch('/morari/team/thumbsUp.controller/' + user, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: array
+			}).then(function (response) {
+				console.log(response.status);
+			});
+		});
+
+	</script>
+
+</body>
+
+</html>

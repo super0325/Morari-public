@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <script src="/morari/guest/js/head.js"></script>
+  <!-- sharepage 公用頁面 -->
+  <script src="/morari/guest/js/share.js"></script>
+
+
+</head>
+
+<body style="display: none">
+  <!-- Header Section Start -->
+  <div class="header"></div>
+
+  <!-- Header Section End -->
+
+  <!-- 分離範例 -->
+  <script src="/morari/team/js/test.js"></script>
+  
+   <div id="booking">
+            <div class="container">
+                <div class="section-header">
+                    <h2>發起揪團</h2>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="booking-form">
+                            <div id="success"></div>
+                            <form id="insert">
+				
+				
+				發文會員:<input type="text" class="form-control" id="userid" name="userid" readonly><br> 
+				標題:<input type="text" class="form-control" id="title" name="title" placeholder="請輸入想要的標題"><br>
+				<div class="form-row">
+   				<div class="control-group col-sm-6">
+				起始日期:<input type="date" class="form-control" id="startdate" name="startdate"
+					required><br> </div>
+  				 <div class="control-group col-sm-6">
+				結束日期:<input type="date" class="form-control" id="enddate" name="enddate" required><br>
+				 </div></div>
+				<div class="form-row">
+   				<div class="control-group col-sm-6">
+				現有人數:<input type="text" class="form-control" id="currentnum" name="currentnum" onkeyup="value=value.replace(/[^\d]/g,'') " required
+					placeholder="請輸入現有人數,僅限數字"><br></div>
+					<div class="control-group col-sm-6">
+				接受人數:<input type="text" class="form-control" id="acceptablenum" name="acceptablenum" onkeyup="value=value.replace(/[^\d]/g,'') "
+					required placeholder="請輸入接受人數,僅限數字"><br>
+				</div></div>
+				<div class="form-row">
+   				<div class="control-group col-sm-6">
+				<label>露營地點：</label><input class="form-control" type="text" id="camparea" name="camparea" required placeholder="請輸入露營地點"><br>
+				<input type="hidden" id="pair" name="pair" value="0" required>
+				<input type="hidden" value='' id="picture" name="picture" />
+						<img src="https://storage.googleapis.com/ryantestpicture/finger" alt="finger"
+							style="max-width: 150px;" id="finger" class="btn">
+						<input type="file" class="form-control-file" id="newjpg" accept="image/*"
+							style="display: none; padding: 0px; border: 0px; border-radius: 5px;">
+				相關資訊：<br>
+				期望性別：<input type="radio" name="gender" value="男生" checked>男生<input type="radio" name="gender" value="女生">女生<input type="radio" name="gender" value="男女皆可">都可以<br>
+				預期住宿：<input type="checkbox" name="lodging" value="帳篷">帳篷<input type="checkbox" name="lodging" value="小木屋">小木屋
+				<input type="checkbox" name="lodging" value="露營車">露營車<br>
+				目前配備：<input type="checkbox" name="equipment" value="帳篷">帳篷<input type="checkbox" name="equipment" value="露營椅">露營椅
+				<input type="checkbox" name="equipment" value="卡式爐">卡式爐<input type="checkbox" name="equipment" value="睡袋">睡袋
+				<input type="checkbox" name="equipment" value="手電筒">手電筒<input type="checkbox" name="equipment" value="桌遊">桌遊<br><br>
+				</div>
+				<div class="control-group col-sm-6">
+				<label>說點什麼吧！</label><br><textarea name="introduction" id="introduction"  class="form-control" style="width: 475px; height: 150px; word-wrap: break-word; overflow-wrap: break-word;"></textarea>
+				<br></div></div>
+				<br>
+				<input type="button" onclick="inputvalue();">一鍵輸入
+				<button class="btn btn-success btn-icon-split" type="submit" id="send" value="Send">
+				<span class="icon text-white-50"><i class="fas fa-plus"></i></span>
+				<span class="text">發起揪團</span></button>
+				</form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   
+  <!-- Footer Section Start -->
+  <div class="footer"></div>
+  <!-- Footer Section End -->
+
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+
+  <!-- Vendor JavaScript File -->
+  <script src="/morari/guest/vendor/jquery/jquery.min.js"></script>
+  <script src="/morari/guest/vendor/jquery/jquery-migrate.min.js" defer></script>
+  <script src="/morari/guest/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+  <script src="/morari/guest/vendor/easing/easing.min.js" defer></script>
+  <script src="/morari/guest/vendor/stickyjs/sticky.js" defer></script>
+  <script src="/morari/guest/vendor/superfish/hoverIntent.js" defer></script>
+  <script src="/morari/guest/vendor/superfish/superfish.min.js" defer></script>
+  <script src="/morari/guest/vendor/wow/wow.min.js" defer></script>
+  <script src="/morari/guest/vendor/slick/slick.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/moment.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/moment-timezone.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/tempusdominus-bootstrap-4.min.js" defer></script>
+
+  <!-- Booking Javascript File -->
+  <script src="/morari/guest/js/booking.js" defer></script>
+  <script src="/morari/guest/js/jqBootstrapValidation.min.js" defer></script>
+
+  <!-- Main Javascript File -->
+  <script src="/morari/guest/js/main.js" defer></script>
+  
+	<script type="text/javascript">
+	fetch("/morari/utils/getuid")
+	.then(response => response.text())
+	.then(data => {
+		// console.log(data)
+		document.getElementById("userid").value = data;
+	})
+	
+	$(function () {
+    $(document).ready(function () {
+			const form = document.getElementById('insert');
+
+			form.addEventListener('submit', function (event) {
+				event.preventDefault();
+				
+				const formData = Array.from(this.elements).reduce(function (data, element) {
+					if (element.type === "radio") {
+				        if (element.checked) {
+				        	data[element.name] = element.value;
+				        }
+				    } 
+					else if(element.type === "checkbox"){
+				    	if(element.checked){
+				    		data[element.name] = data[element.name] || [];
+				    	    data[element.name].push(element.value);
+				    	}
+				    } 
+					else{
+				        data[element.name] = element.value;
+				    }
+				    return data;
+				}, {});
+
+				const today = new Date();
+				today.setDate(today.getDate() - 1);
+				const startDate = new Date(formData['startdate']);
+				const endDate = new Date(formData['enddate']);
+
+				if (startDate > endDate) {
+					alert("開始日期不可小於結束日起，這不是時間旅行！！！");
+					return;
+				} else if (startDate < today || endDate < today) {
+					alert("抱歉我們無法讓你回到過去，請重新選擇時間");
+					return;
+				}
+				
+				const value = formData['userid'];
+				const data = { uuid: value };
+				delete formData['userid'];
+
+				const json = JSON.stringify(formData);
+				console.log(json);
+
+				var result = confirm("確定要新增本筆資料嗎");
+
+				if (result) {
+
+					fetch('/morari/team/insertMaterial.controller/' + data.uuid , {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: json
+					})
+						.then(function (response) {
+							if (response.status == 200) {
+								location.href = "/morari/team";
+							}
+					});
+
+				}
+
+			});
+		}
+    );
+});
+	
+	document.getElementById("finger").addEventListener("click", function () {
+		document.getElementById("newjpg").click();
+	});
+	
+	document.getElementById("newjpg").addEventListener("change", function () {
+		file = this.files[0];
+		console.log(file)
+		let reader = new FileReader();
+		reader.onload = function (e) {
+			document.getElementById("finger").src = e.target.result;
+		};
+		reader.readAsDataURL(file);
+	});
+
+	$(document).ready(function () {
+		$('input[type="file"]').change(function () {
+			var file = this.files[0];
+			var formData = new FormData();
+			formData.append('file', file);
+			$.ajax({
+				type: 'POST',
+				url: '/morari/team/uploadpicturetogoogle.controller',
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function (responseData) {
+					console.log(responseData);
+					document.getElementById("picture").value = responseData;
+				}
+			});
+		});
+	});
+	
+	function inputvalue(){
+		document.getElementById("title").setAttribute("value", "一起來場酣暢淋漓的露營吧");
+		document.getElementById("startdate").setAttribute("value", "2023-03-04");
+		document.getElementById("enddate").setAttribute("value", "2023-03-05");
+		document.getElementById("currentnum").setAttribute("value", "8");
+		document.getElementById("acceptablenum").setAttribute("value", "8");
+		document.getElementById("introduction").value = "歡迎各位露營同好一起參加，讓我們快樂去露營吧，GOGOGO"
+		document.getElementById("camparea").setAttribute("value", "玉山");
+	}
+	
+	</script>	
+
+	
+</body>
+
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta charset="UTF-8">
+   <title>ajax03</title>
+   <script type="text/javascript">
+      var xh = new XMLHttpRequest();
+      xh.open('post', 'profiles.controller', true);
+      xh.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xh.send('userName=green&userAddress=taiwan&userPhone=1254-5521-9654');
+
+      xh.onload = function () {
+         console.log('status:' + xh.status);
+         console.log('result:' + xh.responseText);
+      }
+
+      console.log('finished');
+   </script>
+</head>
+
+<body>
+   ajax03
+</body>
+
+</html>

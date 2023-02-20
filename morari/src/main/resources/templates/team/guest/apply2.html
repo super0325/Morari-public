@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+	<script src="/morari/guest/js/head.js"></script>
+	<!-- sharepage 公用頁面 -->
+	<script src="/morari/guest/js/share.js"></script>
+
+
+</head>
+
+<body style="display: none">
+	<!-- Header Section Start -->
+	<div class="header"></div>
+
+	<!-- Header Section End -->
+
+	<!-- 分離範例 -->
+	<script src="team/js/test.js"></script>
+
+	<div id="rooms">
+		<div class="container">
+			<div class="section-header">
+				<h2>想申請的表單們</h2>
+			</div>
+
+			<div id="result" class="row"></div>
+
+			<div id="apply" class="room-link"></div>
+
+		</div>
+	</div>
+	<div id="page"></div>
+
+	<!-- Footer Section Start -->
+	<div class="footer"></div>
+	<!-- Footer Section End -->
+
+	<a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+
+	<!-- Vendor JavaScript File -->
+	<script src="/morari/guest/vendor/jquery/jquery.min.js"></script>
+	<script src="/morari/guest/vendor/jquery/jquery-migrate.min.js" defer></script>
+	<script src="/morari/guest/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+	<script src="/morari/guest/vendor/easing/easing.min.js" defer></script>
+	<script src="/morari/guest/vendor/stickyjs/sticky.js" defer></script>
+	<script src="/morari/guest/vendor/superfish/hoverIntent.js" defer></script>
+	<script src="/morari/guest/vendor/superfish/superfish.min.js" defer></script>
+	<script src="/morari/guest/vendor/wow/wow.min.js" defer></script>
+	<script src="/morari/guest/vendor/slick/slick.min.js" defer></script>
+	<script src="/morari/guest/vendor/tempusdominus/js/moment.min.js" defer></script>
+	<script src="/morari/guest/vendor/tempusdominus/js/moment-timezone.min.js" defer></script>
+	<script src="/morari/guest/vendor/tempusdominus/js/tempusdominus-bootstrap-4.min.js" defer></script>
+
+	<!-- Booking Javascript File -->
+	<script src="/morari/guest/js/booking.js" defer></script>
+	<script src="/morari/guest/js/jqBootstrapValidation.min.js" defer></script>
+
+	<!-- Main Javascript File -->
+	<script src="/morari/guest/js/main.js" defer></script>
+
+	<script type="text/javascript">
+
+		var user;
+
+		var datalength = 0;
+
+		var page = 1;
+
+		$(function () {
+			$(document).ready(function () {
+
+				fetch("/morari/utils/getuid")
+					.then(response => response.text())
+					.then(data => {
+						console.log(data)
+
+						user = data
+
+						fetch('/morari/team/findApply.controller/'+ user, { method: 'GET' }).then(
+							function (response) {
+								if (response.status != 200) {
+									console.log(response.satus);
+									return;
+								}
+
+								response.json().then(function (data) {
+
+									console.log(data)
+									
+									var applyData = "";
+
+									for (var i = 0; i < data.length; i++) {
+
+										applyData += '<div class="col-md-12 room">' +
+											'<div class="row">' +
+											'<div  class="col-md-6">' +
+											'<div class="room-img">' +
+											'<img src="' + data[i].initiating.picture + '">' +
+											"</div>" +
+											"</div>" +
+											'<div class="col-md-6">' +
+											'<div class="room-des">' +
+											'<h3>揪團編號：' + data[i].initiating.initiatingnum + ' / 露營地點：' + data[i].initiating.camparea + '</h3>' +
+											'<h3>' + data[i].userprofiles.userdetail.nickname + '</h3>' +
+											'<h1>' + data[i].applypeople + '<span>(申請人數)</span></h1>' +
+											'<span>對你說：' + data[i].applymessage + '</span>' +
+											'<div class="room-link">' +
+											'<a href="#" data-toggle="modal" data-target="#modal-id" onclick="apply(' + data[i].applyid + ');">接受</a>' +
+											'<a href="#" data-toggle="modal" data-target="#modal-id" onclick="reject(' + data[i].applyid + ');">拒絕</a>' +
+											'<a href="#" data-toggle="modal" data-target="#modal-id" onclick="permanentreject(' + data[i].applyid + ');">永久拒絕</a>' +
+											'</div>' +
+											'</div>' +
+											'</div>' +
+											'</div>' +
+											'</div>'
+									}
+									document.getElementById('result').innerHTML = applyData;
+
+								});
+
+							});
+
+					});
+
+			});
+
+		})
+		
+		function apply(applyid){
+			
+			var result = confirm("確定要接受嗎");
+			
+			if(result){
+				
+			fetch('/morari/team/acceptApply.controller/' +  applyid, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: null
+			})
+				.then(function (response) {
+					if (response.status == 200) {
+						console.log("成功拒絕")
+						window.location.href = "/morari/team/apply.controller";
+					}
+			});
+				
+			}
+			
+		}
+		
+		function reject(applyid){
+			
+			var result = confirm("確定要拒絕嗎");
+			
+			if(result){
+				
+			fetch('/morari/team/reject.controller/' +  applyid, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: null
+			})
+				.then(function (response) {
+					if (response.status == 200) {
+						console.log("成功拒絕")
+						window.location.href = "/morari/team/apply.controller";
+					}
+			});
+				
+			}
+			
+			
+		}
+		
+		function permanentreject(applyid){
+			
+			var result = confirm("確定要使用永久拒絕嗎？\n按下確定後，該名用戶將無法再對您的此筆揪團發出申請");
+			
+			if(result){
+				
+			fetch('/morari/team/permanentreject.controller/' +  applyid, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: null
+			})
+				.then(function (response) {
+					if (response.status == 200) {
+						console.log("成功拒絕")
+						window.location.href = "/morari/team/apply.controller";
+					}
+			});
+				
+			}
+			
+		}
+
+	</script>
+
+</body>
+
+</html>

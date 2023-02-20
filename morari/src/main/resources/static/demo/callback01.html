@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>callback</title>
+<script type="text/javascript">
+  function sayHello(name){
+	  alert('hola,' + name);
+  }
+  
+  function processCallBackAction(callbackname){
+	  var yourName = prompt('please input your name');
+	  callbackname(yourName); 
+  }
+  
+  processCallBackAction(sayHello);
+</script>
+</head>
+<body>
+CallBack01
+</body>
+</html>

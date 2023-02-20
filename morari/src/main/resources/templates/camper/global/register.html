@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <script src="/morari/admin/js/head.js"></script>
+
+</head>
+
+<body class="bg-gradient-primary">
+
+    <div class="container">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4"><a href="/morari/home"><img
+                                            src="/morari/img/camper.png" alt="home" style="max-width: 50px;"></a> Create
+                                    an Account!</h1>
+                            </div>
+                            <form class="user" id="register">
+                                <div class="form-group">
+                                    <input type="email" class="form-control form-control-user" id="registeremail"
+                                        name="email" placeholder="Email">
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="password" class="form-control form-control-user" name="password"
+                                            id="registerpassword" placeholder="Password">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="password" class="form-control form-control-user"
+                                            id="registerpasswordcheck" placeholder="Repeat Password">
+                                    </div>
+                                </div>
+                                <p id="errormsg" style="color: red;"></p>
+                                <a class="btn btn-primary btn-user btn-block" id="Registersubmit"
+                                    onclick="submitForm()">
+                                    Register Account
+                                </a>
+                                <hr>
+                                <a href="/morari/oauth2/authorization/google" class="btn btn-google btn-user btn-oauth"
+                                    id="btn-oauth">
+                                    <i class="fab fa-google fa-fw"></i>
+                                </a>
+                                <a href="/morari/oauth2/authorization/facebook"
+                                    class="btn btn-facebook btn-user btn-oauth" id="btn-oauth">
+                                    <i class="fab fa-facebook-f fa-fw"></i>
+                                </a>
+                                <a href="/morari/oauth2/authorization/github" class="btn btn-github btn-user btn-oauth"
+                                    id="btn-oauth">
+                                    <i class="fab fa-github fa-fw"></i>
+                                </a>
+                                <a class="btn  btn-user btn-oauth" id="btn-key"
+                                    style="background-color: rgb(210, 156, 57);">
+                                    <i class="fas fa-comment-medical" style="color: white;"></i>
+                                </a>
+                            </form>
+                            <hr>
+                            <div class="text-center">
+                                <a class="small" href="/morari/forgotpassword">Forgot Password?</a>
+                            </div>
+                            <div class="text-center">
+                                <a class="small" href="/morari/login">Already have an account? Login!</a>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/morari/admin/vendor/jquery/jquery.min.js"></script>
+    <script src="/morari/admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/morari/admin/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="/morari/admin/js/sb-admin-2.min.js"></script>
+    <script>
+        let key = document.getElementById("btn-key");
+        key.addEventListener("click", () => {
+            document.getElementById("registeremail").value= "hellowmoraritest1@camp.com";
+            document.getElementById("registerpassword").value="zxcvzxcvzxcv";
+            document.getElementById("registerpasswordcheck").value="zxcvzxcvzxcv";
+        });
+        function submitForm() {
+            let email = document.getElementById("registeremail").value;
+            let password = document.getElementById("registerpassword").value;
+            let passwordCheck = document.getElementById("registerpasswordcheck").value;
+            let data = {
+                email: email,
+                password: password
+            };
+            // Use fetch API or jQuery.ajax to send data as JSON to server
+            fetch('/morari/api/auth/register', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(response => {
+                    if (response.status === 201) {
+                        // success
+                        console.log("register success")
+                        window.location.href = '/morari/login';
+                    } else if (response.status === 409) {
+                        document.getElementById("errormsg").innerHTML = "register failed";
+                        console.log("register failed")
+                    } else {
+                        document.getElementById("errormsg").innerHTML = "register failed";
+                        console.log("register failed")
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        }
+    </script>
+
+</body>
+
+</html>

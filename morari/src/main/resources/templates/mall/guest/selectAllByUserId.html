@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <script src="/morari/guest/js/head.js"></script>
+  <!-- sharepage 公用頁面 -->
+  <script src="/morari/guest/js/share.js"></script>
+
+  <style>
+    td {
+      border: 2px black solid;
+    }
+  </style>
+
+
+
+</head>
+
+<body style="display: none">
+  <!-- Header Section Start -->
+  <div class="header"></div>
+  <!-- Header Section End -->
+  <div class="wrapper">
+
+
+
+
+
+    <!-- 分離範例 -->
+
+
+    <div class="container">
+      <div class="center">
+
+        <table id="result"></table>
+      </div>
+    </div>
+
+
+
+
+  </div>
+  <!-- Footer Section Start -->
+  <div class="footer"></div>
+  <!-- Footer Section End -->
+
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+
+  <!-- Vendor JavaScript File -->
+  <script src="/morari/guest/vendor/jquery/jquery.min.js"></script>
+  <script src="/morari/guest/vendor/jquery/jquery-migrate.min.js" defer></script>
+  <script src="/morari/guest/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+  <script src="/morari/guest/vendor/easing/easing.min.js" defer></script>
+  <script src="/morari/guest/vendor/stickyjs/sticky.js" defer></script>
+  <script src="/morari/guest/vendor/superfish/hoverIntent.js" defer></script>
+  <script src="/morari/guest/vendor/superfish/superfish.min.js" defer></script>
+  <script src="/morari/guest/vendor/wow/wow.min.js" defer></script>
+  <script src="/morari/guest/vendor/slick/slick.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/moment.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/moment-timezone.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/tempusdominus-bootstrap-4.min.js" defer></script>
+
+  <!-- Booking Javascript File -->
+  <script src="/morari/guest/js/booking.js" defer></script>
+  <script src="/morari/guest/js/jqBootstrapValidation.min.js" defer></script>
+
+  <!-- Main Javascript File -->
+  <script src="/morari/guest/js/main.js" defer></script>
+
+  <script type="text/javascript">
+    var id
+    var uid;
+    fetch("/morari/utils/getuid")
+      .then(response => response.text())
+      .then(datauid => {
+        uid = datauid
+        id = datauid;
+
+        fetch('/morari/ProductCart/selectAllByUserId', { method: 'GET' }).then(
+          function (response) {
+            if (response.status != 200) {
+              console.log(response.satus);
+              return;
+            }
+            console.log(response);
+            response.json().then(function (n) {
+
+              var tableData =
+                "<h3>我的購物車&nbsp;&nbsp;" +
+                "<small>   目前擁有<font color='red'>" + n.length + "</font>種產品</small></h3>" +
+                "<th style='text-align:right;'>產品名稱</th>" + "<th>產品價格</th>" +
+                "<th>數量</th>" + "<th>照片</th>" +
+                "<th>小計</th>";
+              var total = 0;
+              if (n.length == 0) {
+                alert("暫無希望購買的產品");
+                location.replace(" https://localhost:8443/morari/ProductCart/productcartqueryallmain.controller ")
+              } else {
+                for (var i = 0; i < n.length; i++) {
+                  var money = n[i].pdprice * n[i].ctqty
+                  total += money; // 累加money到total
+                  tableData +=
+                    "<tr>" +
+                    "<td style='text-align:right;'>" + n[i].pdname + "</td>" + "<td>" + 'NT$' + n[i].pdprice + "</td>" +
+                    "<td><button id='decrement' type='button' value=-1 onclick='adjustQuantity(" + n[i].id + ", " + n[i].ctqty + "," + n[i].pdinventory + ", value)'>-</button>" +
+                    "   " + n[i].ctqty + "   " +
+                    "<button id='increment' type='button' value=1 onclick='adjustQuantity(" + n[i].id + ", " + n[i].ctqty + "," + n[i].pdinventory + ", value)'>+</button></td>" +
+                    "<td><img src='" + n[i].pdpicture + "' style='max-width: 150px;'></td>" +
+                    "<td>" + 'NT$' + money + "</td>" +
+                    "<td><button id='delete' type='button' value='n[i].id' onclick='confirmDelete(" + n[i].id + ")'>移除</button></td>" +
+                    "</tr>"
+                }
+                tableData += "<tr><td colspan='4' style='text-align:right;'><font size='5'>總計</font></td><td colspan='2' ><font size='5' color='red'>" + 'NT$' + total + "</font></td></tr>" +
+                  "<tr><td colspan='3'></td>" +
+                  "<td colspan='3'><input type='button' id='selectbyuserid' value='清空購物車' onclick='selectbyuserid(" + '"' + uid + '"' + ")'>" +
+                  "<input type='button' id='createOrder' value='結帳' onclick='createOrder()'></td></tr>";
+              }
+
+              document.getElementById('result').innerHTML = tableData;
+            });
+
+          });
+      });
+    function selectbyuserid() {
+      if (confirm("確定清空購物車?")) {
+        $.ajax({
+          url: '/morari/ProductCart/deleteAllByUserId/' + uid,
+          type: 'delete',
+          dataType: 'text',
+          success: function (data) {
+            alert(data);
+            location.reload();
+          },
+          error: function () {
+            // 刪除失敗時的處理
+            alert('刪除失敗');
+          }
+
+        });
+      } else {
+      }
+    }
+    function confirmDelete(id) {
+      if (confirm("確定移除此產品?")) {
+        $.ajax({
+          url: '/morari/ProductCart/deleteById/' + id,
+          type: 'delete',
+          dataType: 'text',
+          success: function (data) {
+            alert(data);
+            location.reload();
+          },
+          error: function () {
+            // 刪除失敗時的處理
+            alert('刪除失敗');
+          }
+        });
+      } else {
+      }
+    }
+    function adjustQuantity(id, ctqty, pdinventory, value) {
+      var ctqty = parseInt(ctqty) + parseInt(value)
+      var pdinventory = parseInt(pdinventory)
+      if (parseInt(pdinventory) - parseInt(ctqty) != -1) {
+
+        if (parseInt(ctqty) != -1) {
+          var data = {
+            "id": id,
+            "ctqty": ctqty
+          };
+          $.ajax({
+            url: '/morari/ProductCart/updataById',
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            type: 'put',
+            dataType: 'text',
+            success: function (data) {
+              location.reload();
+            }
+          });
+        } else {
+          alert("購物車數量已經見底囉!");
+
+        }
+      } else {
+        alert("目前庫存只剩" + parseInt(pdinventory) + "件產品囉!");
+
+      }
+
+
+
+    }
+    function createOrder() {
+
+      window.location.href = "/morari/ProductOrder/orderPreview.controller/" + uid;
+
+
+    }
+  </script>
+
+
+
+</body>
+
+</html>

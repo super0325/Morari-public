@@ -1,0 +1,70 @@
+<div class="container">
+	<p>
+	<h2>New Post</h2>
+	<br>
+	<form>
+		<div>
+			<label>*標題</label>
+			<input type="text" class="form-control" name="title" id="title" maxlength="30">
+			<br>
+		</div>
+		<div>
+			<label>*內容</label>
+			<textarea class="form-control" name="content" id="postcontent" rows="10"></textarea>
+			<br>
+		</div>
+		<div>
+			<label>照片</label>
+			<input type="file" name="picture" id="picture"><br>
+			<img alt="" src="" name="showpicture" id="showpicture" width="50%">
+			<br><br>
+		</div>
+		<div class="form-row">
+			<div class="control-group col-sm-6">
+				<label>開始露營日期</label>
+				<input type="date" class="form-control" name="startDate" id="startDate">
+				<br>
+			</div>
+			<div class="control-group col-sm-6">
+				<label>結束露營日期</label>
+				<input type="date" class="form-control" name="endDate" id="endDate">
+				<br>
+			</div>
+		</div>	
+		<div class="form-row">	
+			<div class="control-group col-sm-6">
+				<label>露營人數</label>
+				<select class="custom-select" name="people" id="people">
+					<option value="">請選擇</option>
+				</select>
+				<br>
+			</div>
+			<div class="control-group col-sm-6">
+				<label>露營費用</label>
+				<input type="number" class="form-control" name="price" id="price" min="1">
+				<br>
+			</div>
+		</div>
+		<div class="form-row">	
+			<div class="control-group col-sm-6">
+				<label>露營城市</label>
+				<select class="custom-select" name="county" id="county">
+					<option value="">請選擇</option>
+				</select>
+			</div>
+			<div class="control-group col-sm-6	">
+				<label>評分</label>
+				<select class="custom-select" name="score" id="score">
+					<option value="">請選擇</option>
+				</select>
+			</div>
+		</div>
+		<div>
+			<br>
+			<input type="button" value="送出" id="sendnewpost">
+			<input type="reset" value="清除">
+			<input type="button" value="回上一頁" onclick="history.back()">
+			<input type="button" value="一鍵輸入" id="fastinput">
+		</div><br>
+	</form>
+</div>

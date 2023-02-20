@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <script src="/morari/guest/js/head.js"></script>
+  <!-- sharepage 公用頁面 -->
+  <script src="/morari/guest/js/share.js"></script>
+
+  <style>
+    td {
+      border: 2px black solid;
+    }
+
+    .modal-dialog {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+
+  <script>
+    var url = window.location.href;
+    var id = url.split("/").pop();
+  </script>
+
+</head>
+
+<body style="display: none">
+  <!-- Header Section Start -->
+  <div class="header"></div>
+  <!-- Header Section End -->
+  <div class="wrapper">
+
+
+
+
+
+    <!-- 分離範例 -->
+
+    <div id="rooms">
+      <div class="container">
+        <div class="section-header">
+          <h2>凹豆商城</h2>
+        </div>
+        <div id="banners" class="row">
+          <div class="modal fade bs-example-modal-lg text-center" id="imgModal" tabindex="-1" role="dialog"
+            data-toggle="modal" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" style="display:inline-block;width:auto;">
+              <div class="modal-content">
+                <div id="imgshow"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div id="rooms">
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+  </div>
+  <!-- Footer Section Start -->
+  <div class="footer"></div>
+  <!-- Footer Section End -->
+
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+
+  <!-- Vendor JavaScript File -->
+  <script src="/morari/guest/vendor/jquery/jquery.min.js"></script>
+  <script src="/morari/guest/vendor/jquery/jquery-migrate.min.js" defer></script>
+  <script src="/morari/guest/vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+  <script src="/morari/guest/vendor/easing/easing.min.js" defer></script>
+  <script src="/morari/guest/vendor/stickyjs/sticky.js" defer></script>
+  <script src="/morari/guest/vendor/superfish/hoverIntent.js" defer></script>
+  <script src="/morari/guest/vendor/superfish/superfish.min.js" defer></script>
+  <script src="/morari/guest/vendor/wow/wow.min.js" defer></script>
+  <script src="/morari/guest/vendor/slick/slick.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/moment.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/moment-timezone.min.js" defer></script>
+  <script src="/morari/guest/vendor/tempusdominus/js/tempusdominus-bootstrap-4.min.js" defer></script>
+
+  <!-- Booking Javascript File -->
+  <script src="/morari/guest/js/booking.js" defer></script>
+  <script src="/morari/guest/js/jqBootstrapValidation.min.js" defer></script>
+
+  <!-- Main Javascript File -->
+  <script src="/morari/guest/js/main.js" defer></script>
+
+  <script type="text/javascript">
+
+    var uid;
+    fetch("/morari/utils/getuid")
+      .then(response => response.text())
+      .then(datauid => {
+        // console.log(data)
+        // document.getElementById("uid").value = data;
+        uid = datauid;
+      })
+
+    fetch('/morari/mall/selectByPdid/' + id, { method: 'GET' }).then(
+
+      function (response) {
+        if (response.status != 200) {
+          console.log(response.satus);
+          return;
+        }
+        console.log(response);
+        response.json().then(function (n) {
+          // 					console.log(n);
+          var banners = document.getElementById("banners");
+          //创建一个div
+          var div = document.createElement("div");
+          //设置div的id
+          // 					div.id = "abc";
+          //设置div的class
+          div.className = "col-md-12 room";
+          //设置style
+          //div.style.display="block";
+          div.click = "selectbyid()";
+          //设置子div的其他属性，直接通过字符串连接的方式连接即可。动态值放在引号外面就行
+          div.innerHTML =
+
+            '<div class="row">' +
+            '<div class="col-md-6">' +
+            '<div class="room-img">' +
+            '<img src="' + n.pdpicture + '"  style="width:700px;max-height:500px;cursor: pointer;" onclick="showMaxImg(this)">' +
+            '</div>' +
+            '</div>' +
+            '<div class="col-md-6">' +
+            '<div class="room-des">' +
+            '<h3>' + n.pdname + '</h3>' +
+            '<h1>NT$' + n.pdprice + '</h1>' +
+            '<ul class="room-size">' +
+            '<li><i class="fa fa-arrow-right"></i>品牌: ' + n.pdtitle + '</li>' +
+            '<li><i class="fa fa-arrow-right"></i>類型: ' + n.pdtype + ' </li>' +
+            '</ul>' +
+
+            '<div class="room-link">' +
+            '<a href="#" data-toggle="modal" data-target="#modal-id" onclick="addToCart(' + n.pdid + ')">加入購物車</a>' +
+            '<a href="https://localhost:8443/morari/ProductCart/productcartqueryallmain.controller">返回商城</a>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div>' +
+            '<div class="container">' +
+            '<div class="section-header">' +
+            '<h1>' + "產品描述" + '</h1>' +
+            '<h5>' + n.pdcontent + '</h5>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+
+          banners.appendChild(div);
+
+        });
+      });
+    function selectbyuserid(uid) {
+      $.ajax({
+        success: function (data) {
+          window.location.href = "/morari/ProductCart/queryAllByuserid.controller/" + uid;
+        }
+      });
+    }
+    function addToCart(pdid) {
+      var data = {
+        "pdid": pdid,
+        "userid": uid
+      };
+      $.ajax({
+        type: "POST",
+        url: "/morari/ProductCart/create.controller",
+        data: JSON.stringify(data),
+        contentType: "application/json; charset=utf-8",
+        dataType: "text",
+        success: function (response) {
+          alert(response);
+          // 成功時的回應處理
+        },
+        failure: function (error) {
+          // 失敗時的錯誤處理
+        }
+      });
+    }
+    function showMaxImg(obj) {
+      var src = $(obj).attr("src");
+      $("#imgModal").find("#imgshow").html("<img src='" + src + "' class='carousel-inner img-responsive img-rounded' data-dismiss='modal'>");
+      $("#imgModal").modal('show');
+    }
+  </script>
+
+
+</body>
+
+</html>

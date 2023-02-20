@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>ajax01</title>
+    <script type="text/javascript">
+        var xh = new XMLHttpRequest();
+        console.log('state1:' + xh.readyState);
+        xh.open('get', 'http://localhost:8000/morari/json/profiles1.json', false);
+        console.log('state2:' + xh.readyState);
+        xh.send(null);
+        console.log('state3:' + xh.readyState);
+
+        console.log('status:' + xh.status);
+
+        if (xh.status == 200) {
+            console.log('result:' + xh.responseText);
+            console.log('state4:' + xh.readyState);
+        }
+
+        console.log('finished');
+    </script>
+</head>
+
+<body>
+    ajax01
+</body>
+
+</html>

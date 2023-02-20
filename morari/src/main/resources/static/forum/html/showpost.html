@@ -1,0 +1,90 @@
+<div class="container">
+	<p class="help-block text-danger"></p>
+	<form>
+		<input type="submit" formaction="/morari/forum" value="回論壇">
+		<input type="submit" formaction="/morari/forum/showpostbyuserid.controller" value="回個人貼文">
+	</form>
+	<p class="help-block text-danger"></p>
+
+	<form>
+		<div>
+			<label>標題:</label>
+			<input type="text" class="form-control" name="title" id="title" disabled>
+			<p class="help-block text-danger"></p>
+		</div>
+		<div>
+			<label>內容:</label>
+			<textarea class="form-control" name="content" id="content" rows="10" disabled></textarea>
+			<p class="help-block text-danger"></p>
+		</div>
+		<div>
+			<label id="camper" onclick="showcamper()" >發文者:</label>
+			<input type="text" class="form-control" name="user" id="user" disabled>
+			<p class="help-block text-danger"></p>
+		</div>
+		<div>
+			<label>照片:</label><br>
+			<img alt="" id="picture" width="50%">
+			<p class="help-block text-danger"></p>
+		</div>
+		<div class="form-row">
+			<div class="control-group col-sm-6">
+				<label>開始露營日期:</label>
+				<input type="text" class="form-control" name="startDate" id="startDate" disabled>
+				<p class="help-block text-danger"></p>
+			</div>
+			<div class="control-group col-sm-6">
+				<label>結束露營日期:</label>
+				<input type="text" class="form-control" name="endDate" id="endDate" disabled>
+				<p class="help-block text-danger"></p>
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="control-group col-sm-6">
+				<label>露營人數:</label>
+				<input type="text" class="form-control" name="people" id="people" disabled>
+				<p class="help-block text-danger"></p>
+			</div>
+			<div class="control-group col-sm-6">
+				<label>露營費用:</label>
+				<input type="text" class="form-control" name="price" id="price" disabled>
+				<p class="help-block text-danger"></p>
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="control-group col-sm-6">
+				<label>露營城市:</label>
+				<input type="text" class="form-control" name="county" id="county" disabled>
+				<p class="help-block text-danger"></p>
+			</div>
+			<div class="control-group col-sm-6">
+				<label>評分:</label>
+				<input type="text" class="form-control" name="score" id="score" disabled>
+				<p class="help-block text-danger"></p>
+			</div>
+		</div>
+		<div>
+			<label>最後更新日期:</label>
+			<input type="text" class="form-control" name="releaseDate" id="releaseDate" disabled>
+			<p class="help-block text-danger"></p>
+		</div>
+		<div class="form-row">
+			<div class="control-group col-sm-6">
+				<label>喜歡本貼文人數:</label>
+				<input type="text" class="form-control" name="userLike" id="userLike" style="width: 92%; float: left;" disabled>
+				<img id="like" src="/morari/forum/img/like.png" width="35" style="float: right;">
+				<p class="help-block text-danger"></p>
+			</div>
+			<div class="control-group col-sm-6">
+				<label>不喜歡本貼文人數:</label>
+				<input type="text" class="form-control" name="userUnlike" id="userUnlike"
+					style="width: 92%; float: left;" disabled>
+				<img id="unlike" src="/morari/forum/img/unlike.png" width="35" style="float: right;">	
+				<p class="help-block text-danger"></p>
+			</div>
+		</div>
+		<p class="help-block text-danger"></p>
+		<input type="button" id="sub" value="檢舉貼文">
+	</form>
+</div>
+<hr>
