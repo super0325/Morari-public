@@ -21,7 +21,7 @@ import com.campingmapping.team4.spring.t424camp.model.service.SiteService;
 
 @Controller
 @RequestMapping("/camp")
-public class returnFulledDays {
+public class ReturnFulledDays {
 	
 	@Autowired
 	private CampService campService;

@@ -24,7 +24,7 @@ import io.jsonwebtoken.io.IOException;
 
 @Controller
 @RequestMapping("/admin/camp")
-public class IO_csv_json_pdf {
+public class IOCsvJsonPdf {
 	
 	@Autowired
 	private OrderRepository orderRepository;
